@@ -36,4 +36,22 @@ assert.equal(node('f_nivel').value,'');assert.equal(node('f_mod').value,'');asse
 assert.equal(run('filtrados().length'),context.window.OFERTA.filter(o=>o.i===institution).length);
 assert.equal(node('carreras').hidden,false);
 assert.equal((node('universidades-inicio').innerHTML.match(/data-universidad=/g)||[]).length,new Set(context.window.OFERTA.map(o=>o.i)).size);
+// Trayectoria Saber 11 V2: selección expresa y máximo no acumulable.
+run('S=VACIO();S.t={saber2026:true};todo()');assert.equal(run('PARTES.t'),5);assert.equal(run('PUNTAJE'),5);
+run('S.t.utc=true;S.t.jco=true;calcular()');assert.equal(run('PARTES.t'),5);
+run('S=VACIO();S.saber=99;calcular()');assert.equal(run('PARTES.t'),0,'El percentil no acredita las demás condiciones');
+run('S.t.saber2026=true;calcular()');assert.equal(run('PUNTAJE'),45);
+assert.ok(node('f_trayectorias').innerHTML.includes('calendario A'));
+assert.ok(node('v_trayectorias').innerHTML.includes('SIMAT'));
+// Recorrido sin condiciones: permite avanzar, informa el cero y conserva respuestas al volver.
+run('S=VACIO();paso=0;todo()');assert.ok(node('siguiente').innerHTML.includes('Ninguna me aplica'));
+node('siguiente').listeners.click();assert.equal(run('paso'),1);assert.equal(run('PARTES.e'),0);
+assert.ok(node('siguiente').innerHTML.includes('sin este dato'));
+node('siguiente').listeners.click();assert.equal(run('paso'),2);
+run('S.saber=101;todo()');assert.equal(node('siguiente').disabled,true);node('siguiente').listeners.click();assert.equal(run('paso'),2);
+run('S.saber="";todo()');node('siguiente').listeners.click();assert.equal(run('paso'),3);
+assert.ok(node('siguiente').innerHTML.includes('Ninguna me aplica: ver resultado'));
+node('siguiente').listeners.click();assert.equal(run('paso'),4);assert.equal(run('PUNTAJE'),0);
+run('S.t.saber2026=true;todo();cambiarPaso(3)');assert.ok(node('siguiente').innerHTML.includes('Ver mi resultado'));
+node('atras').listeners.click();assert.equal(run('S.t.saber2026'),true);
 console.log('OK: sintaxis, recursos, IDs, inicio, navegación y límites de puntajes. No sustituye pruebas de navegador.');

@@ -363,6 +363,7 @@
       <p>Responde cuatro preguntas cortas, mira cuántos puntos sumas y compara tu puntaje con referencias históricas de las carreras. Ninguna respuesta te quita puntos.</p>
     </div>
 
+    <p id="progreso-paso" class="progreso-paso" aria-live="polite"></p>
     <nav class="pasos" id="pasos" aria-label="Pasos de la calculadora"></nav>
 
     <div class="rejilla" id="rejilla">
@@ -375,6 +376,7 @@
             <span class="tope">hasta 15 pts</span>
           </div>
           <div class="nota">Se suman, pero este criterio llega como máximo a 15 puntos.</div>
+          <p class="ayuda-paso">Si ninguna de estas condiciones te aplica, puedes continuar sin marcar. En este criterio sumarás 0 puntos.</p>
           <div class="fichas" id="f_estructural"></div>
           <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl id="v_estructural"></dl></details>
         </div>
@@ -427,10 +429,11 @@
         <div class="tarjeta paso" data-paso="3" hidden>
           <div class="paso-cab">
             <div class="ico"><svg class="i"><use href="#i-sube"/></svg></div>
-            <div><h2>Tu camino hasta hoy</h2><p>¿Ya has participado en alguno de estos programas o procesos de la ciudad?</p></div>
+            <div><h2>Tu camino hasta hoy</h2><p>¿Alguna de estas condiciones hace parte de tu trayectoria? Revisa también la opción de Saber 11.</p></div>
             <span class="tope">hasta 5 pts</span>
           </div>
           <div class="nota">Con una sola condición ya sumas los 5 puntos; tener varias no suma más.</div>
+          <p class="ayuda-paso">Marca solo las condiciones que te apliquen. Si ninguna te corresponde, puedes ver tu resultado sin marcar opciones.</p>
           <div class="fichas" id="f_trayectorias"></div>
           <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl id="v_trayectorias"></dl></details>
         </div>
@@ -455,9 +458,10 @@
           <div class="acciones" id="acciones"></div>
         </div>
 
+        <p id="ayuda-continuar" class="ayuda-continuar" aria-live="polite"></p>
         <div class="navega" id="navega">
           <button type="button" class="btn fant" id="atras"><svg class="i"><use href="#i-flecha-i"/></svg>Atrás</button>
-          <button type="button" class="btn pri" id="siguiente">Siguiente<svg class="i"><use href="#i-flecha-d"/></svg></button>
+          <button type="button" class="btn pri" id="siguiente" aria-describedby="ayuda-continuar">Siguiente<svg class="i"><use href="#i-flecha-d"/></svg></button>
         </div>
       </div>
 
@@ -652,7 +656,10 @@ const TRAYECTORIAS = [
   {id:"je", t:"Graduado de Jóvenes a la E", d:"Antes Jóvenes a la U. Técnico profesional o tecnológico, o certificado en técnico laboral.", a:"Agencia Atenea (base maestra de beneficiarios)."},
   {id:"cons", t:"Consejero de juventud", a:"Secretaría Distrital de Gobierno."},
   {id:"idrd", t:"Deportista destacado IDRD", a:"Listado del Instituto Distrital de Recreación y Deporte (IDRD)."},
-  {id:"jco", t:"Jóvenes con Oportunidades", d:"Estrategia intersectorial para la inclusión social y productiva.", a:"Secretaría Distrital de Integración Social."}
+  {id:"jco", t:"Jóvenes con Oportunidades", d:"Estrategia intersectorial para la inclusión social y productiva.", a:"Secretaría Distrital de Integración Social."},
+  {id:"saber2026", t:"Saber 11: percentil 99 o 100 en julio de 2026", d:"Marca esta opción solo si cumples todas estas condiciones:",
+   requisitos:["Eres estudiante de grado once al cierre de la inscripción o bachiller egresado.","Tu institución educativa es oficial, de calendario A y está ubicada en Bogotá.","Presentaste Saber 11 en julio de 2026, en Bogotá.","Tu puntaje global se ubica en el percentil 99 o 100, según el ICFES."],
+   a:"SIMAT del Ministerio de Educación Nacional y de la Secretaría de Educación de Bogotá, e ICFES. Lineamiento L57_EP V2, Tabla 5 (p. 26) y Tabla 7."}
 ];
 const P_TRAY = 5;
 
@@ -732,8 +739,10 @@ function pintarFichas(){
   }).join("");
   $("f_sisben").innerHTML = SISBEN.map((x,i)=>`<div class="ficha radio" role="radio" tabindex="0" data-s="${i}" aria-checked="${S.sisben===i}">
       <span class="t">${x.t}</span><span class="p">${x.pts?"+"+x.pts:"0"}</span><span class="d">${x.d}</span></div>`).join("");
-  $("f_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<div class="ficha" role="checkbox" tabindex="0" data-t="${x.id}" aria-checked="${!!S.t[x.id]}">
-      <span class="t">${x.t}</span><span class="p">+${P_TRAY}</span>${x.d?`<span class="d">${x.d}</span>`:""}</div>`).join("");
+  $("f_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<div class="ficha ${x.requisitos?"ficha-amplia":""}" role="checkbox" tabindex="0" data-t="${x.id}" aria-checked="${!!S.t[x.id]}">
+    <span class="t">${x.t}</span><span class="p">+${P_TRAY}</span>${x.d?`<span class="d">${x.d}</span>`:""}${x.requisitos?`<ul class="requisitos-trayectoria">${x.requisitos.map(r=>`<li>${r}</li>`).join("")}</ul>`:""}</div>`).join("");
+  $("v_estructural").innerHTML = ESTRUCTURAL.map(x=>`<dt>${x.t}</dt><dd>${x.a}</dd>`).join("");
+  $("v_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<dt>${x.t}</dt><dd>${x.a}</dd>`).join("");
   // Saber 11
   $$(".segmento button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.modo===S.modo));
   const pct = S.modo==="pct";
@@ -762,7 +771,26 @@ function pintarPasos(){
   $("navega").hidden = paso===4;
   $("portada").hidden = paso!==0;
   $("rejilla").classList.toggle("final", paso===4);
-  $("siguiente").innerHTML = paso===3 ? `Ver mi resultado${ico("i-flecha-d")}` : `Siguiente${ico("i-flecha-d")}`;
+  pintarContinuacion();
+}
+
+
+function pintarContinuacion(){
+  const sinE = !ESTRUCTURAL.some(x=>S.e[x.id]), sinT = !TRAYECTORIAS.some(x=>S.t[x.id]);
+  const etiquetas = [sinE?"Ninguna me aplica: continuar":"Continuar a Tu hogar", S.sisben<0?"Continuar sin este dato":"Continuar a Saber 11", String(S.saber).trim()===""?"Continuar sin este dato":"Continuar a Tu camino", sinT?"Ninguna me aplica: ver resultado":"Ver mi resultado"];
+  const ayudas = [sinE?"No tienes que seleccionar una condición para avanzar. Después revisaremos tu hogar.":"Ahora revisaremos las condiciones de tu hogar.", S.sisben<0?"Si aún no tienes este dato, puedes continuar. Tu estimación no incluirá puntos por Tu hogar hasta que lo completes.":"El siguiente paso es tu resultado de Saber 11.", DETALLE.err|| (String(S.saber).trim()===""?"Puedes consultar tu resultado después. Por ahora, la estimación no incluirá puntos de mérito académico.":"Ya casi terminas. Solo falta revisar tu trayectoria."), sinT?"Puedes terminar sin marcar opciones. Este criterio sumará 0 puntos.":"Sumas 5 puntos en este criterio, aunque marques varias condiciones."];
+  $("progreso-paso").textContent = paso===4?"Tu resultado estimado":"Paso "+(paso+1)+" de 4 · "+NOMBRES_PASO[paso];
+  $("ayuda-continuar").hidden = paso===4;
+  $("ayuda-continuar").textContent = ayudas[paso]||"";
+  $("siguiente").innerHTML = (etiquetas[paso]||"Ver mi resultado")+ico("i-flecha-d");
+  $("siguiente").disabled = paso===2 && !!DETALLE.err;
+}
+function cambiarPaso(nuevo){
+  paso = Math.max(0,Math.min(4,nuevo));
+  pintarPasos();
+  const encabezado = document.querySelector('[data-paso="'+paso+'"] h2');
+  if(encabezado){ encabezado.setAttribute("tabindex","-1"); encabezado.focus({preventScroll:true}); }
+  $("pasos").scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
 }
 
 // ====== MEDIDORES Y MENSAJES ======
@@ -953,10 +981,10 @@ $("f_estructural").addEventListener("change", ev=>{ if(ev.target.matches("[data-
 $$(".segmento button").forEach(b=>b.addEventListener("click", ()=>{ if(S.modo!==b.dataset.modo){ S.modo = b.dataset.modo; S.saber = ""; todo(); } }));
 $("saber").addEventListener("input", ()=>{ S.saber = $("saber").value; todo(); });
 $("rango").addEventListener("input", ()=>{ S.saber = $("rango").value; $("saber").value = S.saber; todo(); });
-$("siguiente").addEventListener("click", ()=>{ paso = Math.min(4, paso+1); pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
-$("atras").addEventListener("click", ()=>{ paso = Math.max(0, paso-1); pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
-$("pasos").addEventListener("click", ev=>{ const b = ev.target.closest("[data-ir-paso]"); if(b){ paso = +b.dataset.irPaso; pintarPasos(); } });
-$("editar").addEventListener("click", ()=>{ paso = 0; pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
+$("siguiente").addEventListener("click", ()=>{ if(paso===2 && DETALLE.err){$("saber").focus();return;} cambiarPaso(paso+1); });
+$("atras").addEventListener("click", ()=>cambiarPaso(paso-1));
+$("pasos").addEventListener("click", ev=>{ const b = ev.target.closest("[data-ir-paso]"); if(b) cambiarPaso(+b.dataset.irPaso); });
+$("editar").addEventListener("click", ()=>cambiarPaso(0));
 
 // ====== EVENTOS DE CARRERAS Y OPCIONES ======
 ["f_texto","f_nivel","f_mod","f_jor","f_alcance","f_orden"].forEach(id=>$(id).addEventListener("input", ()=>{ visibles=24; pintarCarreras(); }));

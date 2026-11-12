@@ -13,3 +13,6 @@ html{scroll-behavior:smooth;scroll-padding-top:150px}body{font-size:15px}.envolt
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-art>img{animation:none}.motion-toggle{display:none}.interest-tile,.university-choice{transition:none}}
 
 .interes[aria-pressed="true"]{background:#eaf6fc;box-shadow:0 0 0 3px #06509415}.regla-min .rel{background:linear-gradient(90deg,#26b4df33,#06509488)}.mensaje.neutro{background:#eaf6fc;color:#164975}.mensaje.neutro b.g{color:#065094}
+
+/* Guía del asistente y criterio Saber 11 de trayectorias. */
+.ayuda-paso{font-size:13px;line-height:1.6;color:#315270;background:#edf6fc;border-left:3px solid #26b4df;padding:12px 15px;border-radius:0 8px 8px 0;margin:0 0 18px}.progreso-paso{font-size:12px;font-weight:600;color:#065094;margin:0 0 12px}.ayuda-continuar{font-size:13px;color:#4d5b70;line-height:1.6;margin:20px 0 0;max-width:670px}.navega{margin-top:12px}.ficha-amplia{grid-column:1/-1}.requisitos-trayectoria{font-size:13px;line-height:1.6;color:#4d5b70;padding-left:18px;margin:8px 0 0}.requisitos-trayectoria li+li{margin-top:5px}.btn:disabled{opacity:.55;cursor:not-allowed}.pasos{scroll-margin-top:145px}@media(max-width:650px){.navega{flex-wrap:wrap}.navega #siguiente{flex:1 1 220px}.navega #atras{flex:0 0 auto}.requisitos-trayectoria{font-size:12px}}
