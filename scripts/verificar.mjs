@@ -15,7 +15,6 @@ vm.runInContext(fs.readFileSync(new URL('../universidades.js',import.meta.url),'
 vm.runInContext(js,context);
 for(const item of context.window.OFERTA){const logo=context.window.LOGOS_UNIVERSIDADES[item.i];assert.ok(logo,'Logo faltante: '+item.i);assert.ok(fs.existsSync(new URL('../'+logo.src,import.meta.url)));}
 assert.ok(vm.runInContext('tarjeta(OFERTA[0])',context).includes('universidad-logo'),'Logo ausente en tarjeta');
-vm.runInContext('elegidos=[OFERTA[0].id];pintarOpciones()',context);assert.ok(node('mias').innerHTML.includes('universidad-logo'),'Logo ausente en opciones');
 const run=s=>vm.runInContext(s,context);
 assert.ok(run('OFERTA.length')>0,'Oferta vacía');
 assert.equal(run('PUNTAJE'),0);
@@ -69,7 +68,7 @@ const nueva=run('tarjeta(OFERTA.find(o=>o.min===null))');
 assert.ok(nueva.includes('Sin referencia JE4'));assert.ok(!nueva.includes('regla-min'));assert.ok(!nueva.includes('null'));
 node('f_alcance').checked=true;assert.ok(run('filtrados().every(o=>Number.isFinite(o.min))'));
 node('f_alcance').checked=false;
-run('elegidos=[OFERTA.find(o=>o.min===null).id];pintarOpciones()');
-assert.ok(node('mias').innerHTML.includes('Sin referencia JE4'));assert.ok(!node('mias').innerHTML.includes('null'));
 for(let n=0;n<10;n++) assert.ok(fs.existsSync(new URL('../assets/intereses/interes-'+n+'.webp',import.meta.url)));
-console.log('OK: 214 ofertas, 44 sin histórico, 2454 cupos, filtros y selección sin puntaje inventado.');
+console.log('OK: 214 ofertas, 44 sin histórico, 2454 cupos, filtros sin puntaje inventado.');
+
+assert.ok(!html.includes('id="opciones"'));assert.ok(!html.includes('data-ir="opciones"'));run('irA("opciones",false)');assert.equal(node("inicio").hidden,false);

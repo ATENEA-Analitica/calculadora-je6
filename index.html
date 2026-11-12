@@ -282,7 +282,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="experiencia.css?v=20261112-dimensiones">
+<link rel="stylesheet" href="experiencia.css?v=20261112-sin-opciones">
 </head>
 <body>
 
@@ -328,7 +328,6 @@
 <button class="pestana" role="tab" id="tab-inicio" aria-controls="inicio" data-tab="inicio">Explora</button>
       <button class="pestana" role="tab" id="tab-puntaje" aria-controls="puntaje" data-tab="puntaje"><svg class="i"><use href="#i-calc"/></svg>Estima tu puntaje</button>
       <button class="pestana" role="tab" id="tab-carreras" aria-controls="carreras" data-tab="carreras"><svg class="i"><use href="#i-brujula"/></svg>Carreras</button>
-      <button class="pestana" role="tab" id="tab-opciones" aria-controls="opciones" data-tab="opciones"><svg class="i"><use href="#i-estrella"/></svg>Mis opciones <span class="cont" id="n_opc" hidden>0</span></button>
       <button class="pestana" role="tab" id="tab-dudas" aria-controls="dudas" data-tab="dudas"><svg class="i"><use href="#i-ayuda"/></svg>Dudas</button>
     </nav>
     <div class="pildora" aria-live="polite"><span>Puntaje estimado</span><b id="pild">0</b></div>
@@ -341,17 +340,17 @@
   <div class="hero">
     <div class="hero-copy"><div class="campaign-label"><span>JÓVENES A LA E</span><b>6</b><small>EDUCACIÓN SUPERIOR · IES PRIVADAS</small></div>
       <h1>Tu próximo<br>capítulo<br><em>empieza aquí.</em></h1>
-      <p>Hay una carrera que conecta con lo que te mueve. Estima tu puntaje, explora según tu interés y compara para preparar tus tres opciones.</p>
+      <p>Hay una carrera que conecta con lo que te mueve. Estima tu puntaje, explora según tu interés y compara los programas de la convocatoria.</p>
       <div class="hero-actions"><button class="btn pri" data-ir="puntaje">Estima tu puntaje</button><button class="btn" id="explorar-inicio">Explora según tu interés y compara <span aria-hidden="true">↗</span></button></div>
       <p class="hero-note">Una herramienta para orientarte en Jóvenes a la E.</p>
     </div>
     <div class="hero-art"><img src="assets/atenea/educacion-posmedia.jpg" width="1947" height="1947" fetchpriority="high" alt="Imagen de educación posmedia del portal de la Agencia Atenea."><div class="art-tag"><span>TU FUTURO TIENE</span><strong>muchos caminos.</strong></div></div>
     <svg class="hero-circuit" viewBox="0 0 660 150" fill="none" aria-hidden="true"><path d="M0 115H150L215 50H390L435 95H610M0 135H170L235 70H370L415 115H660M75 15H210L245 50"/><circle cx="610" cy="95" r="5"/><circle cx="210" cy="15" r="4"/></svg>
   </div>
-  <div class="route-strip"><button data-ir="puntaje"><b>01</b><span>Estima tu puntaje<small>Recorre las cuatro dimensiones</small></span><i aria-hidden="true">↗</i></button><button data-ir="carreras"><b>02</b><span>Explora según tu interés y compara<small>Mira el puntaje mínimo de la convocatoria JE4</small></span><i aria-hidden="true">↗</i></button><button data-ir="opciones"><b>03</b><span>Prepara tus opciones<small>Elige y ordena tres programas</small></span><i aria-hidden="true">↗</i></button></div>
+  <div class="route-strip"><button data-ir="puntaje"><b>01</b><span>Estima tu puntaje<small>Recorre las cuatro dimensiones</small></span><i aria-hidden="true">↗</i></button><button data-ir="carreras"><b>02</b><span>Explora según tu interés y compara<small>Mira el puntaje mínimo de la convocatoria JE4</small></span><i aria-hidden="true">↗</i></button></div>
   <section class="university-section" aria-labelledby="universidades-titulo"><div class="section-heading"><div><span class="eyebrow">TU PRÓXIMO CAMPUS</span><h2 id="universidades-titulo">Instituciones para explorar</h2></div><p><b id="total-instituciones">39</b> instituciones en esta oferta.<br>Selecciona un logo para ver sus programas.</p></div><div class="university-rail" id="universidades-inicio" aria-label="Instituciones de la oferta"></div><p class="rail-hint">Desliza horizontalmente para ver todas las instituciones →</p></section>
   <section id="descubre" class="discover" aria-labelledby="descubre-titulo"><span class="eyebrow">EMPIEZA POR LO QUE TE MUEVE</span><h2 id="descubre-titulo">¿Qué te gustaría hacer?</h2><p>No tienes que tenerlo todo decidido. Elige un interés y conoce los programas relacionados.</p><div id="inicio-intereses" class="interest-grid"></div><button class="btn osc" data-ir="carreras">Explorar todos los programas ↗</button></section>
-  <section class="invitation"><div><span class="eyebrow">DA EL SIGUIENTE PASO</span><h2>Lo que sueñas merece<br>un siguiente paso.</h2><p>Guarda los programas que te interesan y ordénalos según lo que quieres estudiar. Esta herramienta orienta tu elección; la inscripción se realiza en los canales de Atenea.</p></div><div><button class="btn pri" data-ir="opciones">Organizar mis opciones</button><a class="official-link" href="https://www.agenciaatenea.gov.co/convocatorias/convocatoria-jovenes-la-e-6-educacion-superior-en-instituciones-privadas" target="_blank" rel="noopener">Consultar convocatoria en Atenea ↗</a></div></section>
+  <section class="invitation"><div><span class="eyebrow">DA EL SIGUIENTE PASO</span><h2>Lo que sueñas merece<br>un siguiente paso.</h2><p>Explora los programas que te interesan y consulta los detalles de la convocatoria. Esta herramienta orienta tu elección; la inscripción se realiza en los canales de Atenea.</p></div><div><a id="inscribirse" class="official-link btn pri" href="https://www.agenciaatenea.gov.co/convocatorias/convocatoria-jovenes-la-e-6-educacion-superior-en-instituciones-privadas" target="_blank" rel="noopener">Consultar convocatoria en Atenea ↗</a></div></section>
   <p class="orientation-note">Simulación orientativa. Los puntajes de Jóvenes a la E 4 son referencias históricas y no garantizan un cupo en la sexta convocatoria.</p>
 </section>
 
@@ -510,35 +509,6 @@
     <button type="button" class="btn mas" id="mas" hidden></button>
   </section>
 
-  <!-- ===================== MIS OPCIONES ===================== -->
-  <section class="panel-tab" role="tabpanel" id="opciones" aria-labelledby="tab-opciones" hidden>
-    <div class="cab-tab">
-      <div>
-        <h1>Arma tus 3 opciones</h1>
-        <p>En la inscripción puedes elegir hasta tres programas en orden de preferencia. Practica aquí: marca <b>Elegir</b> en la pestaña Carreras y ordénalas.</p>
-      </div>
-    </div>
-    <div class="opciones">
-      <ol class="mias" id="mias"></ol>
-      <div class="tarjeta explica">
-        <h3>¿Cómo se usa el orden?</h3>
-        <ol>
-          <li>Atenea ordena a todos los aspirantes habilitados de mayor a menor puntaje.</li>
-          <li>Cuando llega tu turno, revisa tu opción 1. Si tiene cupo y hay recursos, quedas en esa.</li>
-          <li>Si no, pasa a tu opción 2 y luego a la 3.</li>
-        </ol>
-        <p>Pon primero lo que más quieres estudiar, y deja en la 2 y la 3 programas donde tu puntaje tenga más margen.</p>
-      </div>
-    </div>
-    <div class="llamado">
-      <div>
-        <h2>Tu lugar en la educación superior te está esperando</h2>
-        <p>Jóvenes a la E financia tu matrícula en instituciones de educación superior de Bogotá. Inscribirte no cuesta nada y puede cambiar tu historia.</p>
-      </div>
-      <a class="btn pri" id="inscribirse" href="#" target="_blank" rel="noopener">Consultar inscripción en Atenea<svg class="i"><use href="#i-flecha-d"/></svg></a>
-    </div>
-  </section>
-
   <!-- ===================== DUDAS ===================== -->
   <section class="panel-tab dudas" role="tabpanel" id="dudas" aria-labelledby="tab-dudas" hidden>
     <div class="cab-tab"><div><h1>Antes de decidir, ten en cuenta</h1></div></div>
@@ -694,7 +664,6 @@ const VACIO = () => ({e:{}, etniaGrupo:0, sisben:-1, modo:"pct", saber:"", t:{}}
 let S = Object.assign(VACIO(), leer("je6_estado", {}));
 let paso = 0, PUNTAJE = 0, PARTES = {e:0,ec:0,m:0,t:0}, DETALLE = {}, HAY_DATOS = false;
 let filtroCampo = null, visibles = 24;
-let elegidos = leer("je6_opciones", []).map(id=>POR_ID.has(id)?id:OFERTA.find(o=>o.idHistorico===id)?.id).filter(id=>POR_ID.has(id)).slice(0,3);
 
 // ====== CÁLCULO (Tabla 5) ======
 function calcular(){
@@ -893,14 +862,13 @@ function tarjeta(o){
   const st = estado(o.min), [ic, et] = TXT_ESTADO[st], dif = PUNTAJE-o.min;
   const det = st==="si" ? (dif===0 ? "igual al mínimo de JE4" : `${dif} pts sobre el mínimo de JE4`)
             : st==="cerca" ? `${-dif} pts bajo la referencia JE4` : st==="reto" ? `mínimo JE4: ${o.min}` : "";
-  const sel = elegidos.includes(o.id), lleno = elegidos.length>=3 && !sel;
   return `<article class="programa">
     ${logoUniversidad(o.i)}
     <h3>${esc(o.p)}</h3>
     <div class="ies">${esc(o.i)}</div>
     <div class="chips"><span class="chip">${esc(o.nivel)}</span><span class="chip">${o.mod==="Sin dato"?"Modalidad por confirmar":esc(o.mod)}</span><span class="chip">${esc(o.jor)}</span></div>
     <span class="estado ${st}">${ico(ic)} ${et}${det?` <span class="x">· ${det}</span>`:""}</span>
-    ${o.min===null ? `<p class="sin-referencia">Esta oferta JE6 no tiene un puntaje de referencia JE4. Puedes explorarla y guardarla entre tus opciones.</p>` : `<div class="regla-min" role="img" aria-label="Mínimo JE4 ${o.min} de 100${HAY_DATOS?`, tu puntaje ${PUNTAJE}`:""}">
+    ${o.min===null ? `<p class="sin-referencia">Esta oferta JE6 no tiene un puntaje de referencia JE4. Puedes explorarla sin una comparación histórica de puntaje.</p>` : `<div class="regla-min" role="img" aria-label="Mínimo JE4 ${o.min} de 100${HAY_DATOS?`, tu puntaje ${PUNTAJE}`:""}">
       ${HAY_DATOS?`<span class="rel" style="width:${PUNTAJE}%"></span>`:""}
       <span class="m" style="left:${o.min}%"></span>
       ${HAY_DATOS?`<span class="yo" style="left:${PUNTAJE}%"></span>`:""}
@@ -909,7 +877,6 @@ function tarjeta(o){
     `}
     <div class="pie">
       <span class="cupos"><b>${o.cupos}</b> ${o.cupos===1?"cupo":"cupos"} en JE6</span>
-      <button type="button" class="elegir" data-id="${o.id}" aria-pressed="${sel}" ${lleno?'disabled title="Ya elegiste 3 programas"':""}>${ico("i-estrella")}${sel?"Elegida":"Elegir"}</button>
     </div>
   </article>`;
 }
@@ -925,24 +892,8 @@ function pintarCarreras(){
   $("mas").textContent = `Ver más programas (${l.length-visibles})`;
 }
 
-// ====== MIS OPCIONES ======
-function pintarOpciones(){
-  guardar("je6_opciones", elegidos);
-  $("n_opc").hidden = elegidos.length===0; $("n_opc").textContent = elegidos.length;
-  $("mias").innerHTML = [0,1,2].map(i=>{
-    const o = POR_ID.get(elegidos[i]);
-    if(!o) return `<li class="libre"><span class="orden-n">${i+1}</span><span class="txt">Opción ${i+1} libre. <a href="#carreras" data-ir="carreras">Elige una carrera</a>.</span></li>`;
-    const st = estado(o.min), [, et] = TXT_ESTADO[st];
-    return `<li><span class="orden-n">${i+1}</span>
-      <span class="txt">${logoUniversidad(o.i)}<b>${esc(o.p)}</b><span>${esc(o.i)} · ${o.min===null?"Sin referencia JE4":`mínimo JE4 ${o.min}`}${HAY_DATOS?` · ${et}`:""}</span></span>
-      <button type="button" class="mini" data-mover="${i}" data-dir="-1" ${i===0?"disabled":""} aria-label="Subir">${ico("i-arriba")}<span>Subir</span></button>
-      <button type="button" class="mini" data-mover="${i}" data-dir="1" ${i===elegidos.length-1?"disabled":""} aria-label="Bajar">${ico("i-abajo")}<span>Bajar</span></button>
-      <button type="button" class="mini" data-quitar="${o.id}" aria-label="Quitar">${ico("i-x")}<span>Quitar</span></button></li>`;
-  }).join("");
-}
-
-// ====== PESTAÑAS ======
-const TABS = ["inicio","puntaje","carreras","opciones","dudas"];
+// ====== NAVEGACIÓN ======
+const TABS = ["inicio","puntaje","carreras","dudas"];
 function irA(tab, empujar=true){
   if(!TABS.includes(tab)) tab = "inicio";
   $$(".pestana").forEach(b=>{ const on = b.dataset.tab===tab; b.setAttribute("aria-selected", on); b.tabIndex = on?0:-1; });
@@ -966,7 +917,7 @@ document.addEventListener("click", ev=>{
 });
 
 // ====== EVENTOS DEL ASISTENTE ======
-function todo(){ calcular(); pintarFichas(); pintarSaber(); pintarPasos(); pintarMedidores(); pintarAcciones(); pintarCarreras(); pintarOpciones(); }
+function todo(){ calcular(); pintarFichas(); pintarSaber(); pintarPasos(); pintarMedidores(); pintarAcciones(); pintarCarreras(); }
 function alternar(el){
   if(el.getAttribute("aria-disabled")==="true") return;
   if(el.dataset.e){ S.e[el.dataset.e] = !S.e[el.dataset.e]; }
@@ -998,19 +949,6 @@ $("editar").addEventListener("click", ()=>cambiarPaso(0));
 $("intereses").addEventListener("click", ev=>{
   const b = ev.target.closest(".interes"); if(!b) return;
   filtroCampo = filtroCampo===b.dataset.campo ? null : b.dataset.campo; visibles=24; pintarCarreras();
-});
-$("programas").addEventListener("click", ev=>{
-  const b = ev.target.closest(".elegir"); if(!b) return;
-  const id = +b.dataset.id;
-  elegidos = elegidos.includes(id) ? elegidos.filter(x=>x!==id) : elegidos.concat(id).slice(0,3);
-  pintarCarreras(); pintarOpciones();
-});
-$("mias").addEventListener("click", ev=>{
-  const q = ev.target.closest("[data-quitar]"), mv = ev.target.closest("[data-mover]");
-  if(q) elegidos = elegidos.filter(x=>x!==+q.dataset.quitar);
-  else if(mv){ const i=+mv.dataset.mover, j=i+(+mv.dataset.dir); [elegidos[i],elegidos[j]]=[elegidos[j],elegidos[i]]; }
-  else return;
-  pintarCarreras(); pintarOpciones();
 });
 $("mas").addEventListener("click", ()=>{ visibles += 24; pintarCarreras(); });
 $("btn_filtros").addEventListener("click", ()=>{
