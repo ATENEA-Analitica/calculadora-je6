@@ -1,7 +1,7 @@
 """Genera oferta.js a partir del Excel de oferta JE6 con puntajes mínimos de JE4.
 
 Uso:
-    python scripts/generar_oferta.py JE6_OFERTA_PuntMinJE4.xlsx oferta.js
+    python scripts/generar_oferta.py JE6_OfertaTOTAL_ConCupos.xlsx JE6_OFERTA_PuntMinJE4.xlsx oferta.js
 
 El Excel no se versiona (.gitignore). Solo se publican las columnas que usa la
 calculadora: programa, institución, nivel, modalidad, jornada, campo de
@@ -72,39 +72,57 @@ def institucion(texto: str) -> str:
     return nombre
 
 
-def main(entrada: str, salida: str) -> None:
-    df = pd.read_excel(entrada)
-    df.columns = [c.strip() for c in df.columns]
-    col = {c.upper(): c for c in df.columns}
-
-    def c(nombre: str) -> str:
-        return col[nombre]
-
+def main(total: str, historico: str, salida: str) -> None:
+    oferta = pd.read_excel(total)
+    historia = pd.read_excel(historico)
+    for tabla in (oferta, historia):
+        if tabla.ID.isna().any() or tabla.ID.duplicated().any():
+            raise ValueError("ID ausente o duplicado: el cruce requiere claves únicas")
+    hist = historia.set_index("ID").to_dict("index")
+    campos = {}
+    for _, r in historia.iterrows():
+        campos.setdefault(r["CINE_F_2013_AC_CAMPO_DETALLADO"], set()).add(r["CINE_F_2013_AC_CAMPO_AMPLIO"])
+    extra = {
+        "Construcción e ingeniería civil": "Ingeniería, Industria y Construcción",
+        "Mecánica y profesiones afines a la metalistería": "Ingeniería, Industria y Construcción",
+        "Biología": "Ciencias Naturales, Matemáticas y Estadística",
+        "Física": "Ciencias Naturales, Matemáticas y Estadística",
+        "Ciencias de la tierra": "Ciencias Naturales, Matemáticas y Estadística",
+        "Programas y certificaciones interdisciplinarios relativos a administración de empresas y derecho": "Administración de Empresas y Derecho",
+    }
+    nombres = {int(r.CODIGO_SNIES_IES): institucion(r.INSTITUCION) for _,r in historia.iterrows()}
     registros = []
-    for _, r in df.iterrows():
+    for _, r in oferta.iterrows():
+        h = hist.get(r.ID, {})
+        detalle = r["CINE_F_2013_AC_CAMPO_DETALLADO"]
+        opciones = campos.get(detalle, {extra.get(detalle)})
+        campo = h.get("CINE_F_2013_AC_CAMPO_AMPLIO")
+        if not campo:
+            if len(opciones) != 1 or None in opciones:
+                raise ValueError(f"Campo ambiguo o desconocido: {detalle}")
+            campo = next(iter(opciones))
+        minimo = h.get("PUNTAJE_ELEGIBLE_MINIMO")
         registros.append({
-            "id": int(r[c("ID_OFERTA_PROGRAMA")]),
-            "p": titulo(r[c("PROGRAMA")]),
-            "i": institucion(r[c("INSTITUCION")]),
-            "campo": str(r[c("CINE_F_2013_AC_CAMPO_AMPLIO")]).strip(),
-            "nivel": str(r[c("NIVEL_DE_FORMACIÓN")]).strip(),
-            "mod": str(r[c("MODALIDAD")]).strip(),
-            "jor": titulo(r[c("JORNADA")]),
-            "cupos": int(r[c("TOTAL_CUPOS_ASIGNADOS_Y_REEMPLAZOS")]),
-            "min": int(r[c("PUNTAJE_ELEGIBLE_MINIMO")]),
+            "id": int(r.ID),
+            "idHistorico": int(h["ID_OFERTA_PROGRAMA"]) if h else None,
+            "p": titulo(r.NOMBRE_PROGRAMA_SNIES),
+            "i": nombres.get(int(r.COD_IES), institucion(r.NOMBRE_IES)),
+            "campo": campo,
+            "nivel": str(r["NIVEL_DE_FORMACIÓN"]).strip(),
+            "mod": h.get("MODALIDAD", "Virtual" if r.JORNADA_DEL_PROGRAMA == "VIRTUAL" else "Sin dato"),
+            "jor": titulo(r.JORNADA_DEL_PROGRAMA),
+            "cupos": int(r.TOTAL_CUPOS_ASIGNADOS_Y_REEMPLAZOS),
+            "min": int(minimo) if pd.notna(minimo) else None,
         })
-    registros.sort(key=lambda x: (x["p"], x["i"]))
-
+    registros.sort(key=lambda x: (x["p"], x["i"], x["id"]))
     with open(salida, "w", encoding="utf-8") as f:
         f.write("// Generado por scripts/generar_oferta.py. No editar a mano.\n")
-        f.write("// Oferta JE6 (cupos) con puntaje del último elegible en JE4 (min).\n")
-        f.write("window.OFERTA = ")
+        f.write("// Toda la oferta JE6; cruce por ID. min=null significa sin referencia JE4.\nwindow.OFERTA = ")
         json.dump(registros, f, ensure_ascii=False, separators=(",", ":"))
         f.write(";\n")
-    print(f"{len(registros)} programas escritos en {salida}")
-
+    print(f"{len(registros)} ofertas; {sum(x['min'] is None for x in registros)} sin referencia JE4; {sum(x['cupos'] for x in registros)} cupos")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        sys.exit(__doc__)
-    main(sys.argv[1], sys.argv[2])
+    if len(sys.argv) != 4:
+        sys.exit("Uso: generar_oferta.py oferta_total.xlsx historico.xlsx oferta.js")
+    main(*sys.argv[1:])

@@ -55,3 +55,21 @@ node('siguiente').listeners.click();assert.equal(run('paso'),4);assert.equal(run
 run('S.t.saber2026=true;todo();cambiarPaso(3)');assert.ok(node('siguiente').innerHTML.includes('Ver mi resultado'));
 node('atras').listeners.click();assert.equal(run('S.t.saber2026'),true);
 console.log('OK: sintaxis, recursos, IDs, inicio, navegación y límites de puntajes. No sustituye pruebas de navegador.');
+
+// Oferta completa, datos faltantes y selección sin referencia histórica.
+assert.equal(run('OFERTA.length'),214);
+assert.equal(run('OFERTA.filter(o=>o.min===null).length'),44);
+assert.equal(run('OFERTA.reduce((n,o)=>n+o.cupos,0)'),2454);
+run('filtroCampo=null;S=VACIO();S.saber=100;calcular()');
+for(const id of ['f_texto','f_nivel','f_mod','f_jor']) node(id).value='';
+node('f_alcance').checked=false;node('f_orden').value='az';
+assert.equal(run('filtrados().length'),214);
+assert.equal(run('estado(null)'), 'sinref');
+const nueva=run('tarjeta(OFERTA.find(o=>o.min===null))');
+assert.ok(nueva.includes('Sin referencia JE4'));assert.ok(!nueva.includes('regla-min'));assert.ok(!nueva.includes('null'));
+node('f_alcance').checked=true;assert.ok(run('filtrados().every(o=>Number.isFinite(o.min))'));
+node('f_alcance').checked=false;
+run('elegidos=[OFERTA.find(o=>o.min===null).id];pintarOpciones()');
+assert.ok(node('mias').innerHTML.includes('Sin referencia JE4'));assert.ok(!node('mias').innerHTML.includes('null'));
+for(let n=0;n<10;n++) assert.ok(fs.existsSync(new URL('../assets/intereses/interes-'+n+'.webp',import.meta.url)));
+console.log('OK: 214 ofertas, 44 sin histórico, 2454 cupos, filtros y selección sin puntaje inventado.');

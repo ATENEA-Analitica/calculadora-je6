@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir -p dist/assets
           cp index.html oferta.js universidades.js experiencia.css dist/
-          find assets/atenea assets/universidades -type f ! -name '*.md' -exec cp --parents {} dist/ \;
+          find assets/atenea assets/universidades assets/intereses -type f ! -name '*.md' -exec cp --parents {} dist/ \;
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name == 'workflow_dispatch' && inputs.publicar
         with:

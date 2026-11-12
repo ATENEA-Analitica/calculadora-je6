@@ -282,7 +282,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="experiencia.css?v=20261112-movil">
+<link rel="stylesheet" href="experiencia.css?v=20261112-je6">
 </head>
 <body>
 
@@ -500,9 +500,10 @@
 
     <div class="resumen"><span id="resumen"></span>
       <label class="orden">Ordenar <select id="f_orden">
-        <option value="cerca">Mejores para mi puntaje</option>
+        <option value="cerca">Comparar referencias JE4</option>
         <option value="cupos">Más cupos</option>
-        <option value="az">Nombre (A a Z)</option>
+        <option value="sinref">Sin referencia JE4 primero</option>
+        <option value="az" selected>Nombre (A a Z)</option>
       </select></label>
     </div>
     <div class="programas" id="programas"></div>
@@ -609,7 +610,7 @@
 <footer class="creditos-marcas">Identidad de las instituciones: <a href="assets/universidades/creditos.html">fuentes y créditos de los logos</a>.</footer>
 </main>
 
-<script src="oferta.js"></script>
+<script src="oferta.js?v=20261112-je6"></script>
 <script src="universidades.js"></script>
 <script>
 // ====== CONFIGURACIÓN ======
@@ -693,7 +694,7 @@ const VACIO = () => ({e:{}, etniaGrupo:0, sisben:-1, modo:"pct", saber:"", t:{}}
 let S = Object.assign(VACIO(), leer("je6_estado", {}));
 let paso = 0, PUNTAJE = 0, PARTES = {e:0,ec:0,m:0,t:0}, DETALLE = {}, HAY_DATOS = false;
 let filtroCampo = null, visibles = 24;
-let elegidos = leer("je6_opciones", []).filter(id=>POR_ID.has(id)).slice(0,3);
+let elegidos = leer("je6_opciones", []).map(id=>POR_ID.has(id)?id:OFERTA.find(o=>o.idHistorico===id)?.id).filter(id=>POR_ID.has(id)).slice(0,3);
 
 // ====== CÁLCULO (Tabla 5) ======
 function calcular(){
@@ -800,10 +801,11 @@ function desglose(){
     <div class="riel"><i style="width:${100*PARTES[k]/TOPE[k]}%"></i></div></div>`).join("");
 }
 function mensaje(){
-  const si = OFERTA.filter(o=>PUNTAJE>=o.min).length;
-  const cerca = OFERTA.filter(o=>PUNTAJE<o.min && o.min-PUNTAJE<=MARGEN_CERCA).length;
+  const si = OFERTA.filter(o=>Number.isFinite(o.min) && PUNTAJE>=o.min).length;
+  const cerca = OFERTA.filter(o=>Number.isFinite(o.min) && PUNTAJE<o.min && o.min-PUNTAJE<=MARGEN_CERCA).length;
   if(!HAY_DATOS) return ["neutro", `<b class="g">${OFERTA.length} programas</b>te esperan en esta convocatoria. Responde y te mostramos cómo se comparan sus referencias históricas con tu puntaje.`];
-  if(si>0) return ["", `<b class="g">${si} carreras</b>tuvieron en Jóvenes a la E 4 un último elegible con ${PUNTAJE} puntos o menos.${cerca?` Y ${cerca} más quedaron a menos de ${MARGEN_CERCA} puntos.`:""}`];
+  const nuevas = OFERTA.filter(o=>o.min===null).length;
+  if(si>0) return ["", `<b class="g">${si} carreras</b>tuvieron en Jóvenes a la E 4 un último elegible con ${PUNTAJE} puntos o menos.${cerca?` Y ${cerca} más quedaron a menos de ${MARGEN_CERCA} puntos.`:""} También puedes explorar ${nuevas} ofertas JE6 sin referencia histórica.`];
   return ["neutro", `<b class="g">No te rindas</b>${cerca?`${cerca} carreras quedaron a menos de ${MARGEN_CERCA} puntos de ti. `:""}Mira «Lo que puedes hacer desde ya»: un dato al día o un soporte cargado puede sumar muchos puntos.`];
 }
 function pintarMedidores(){
@@ -841,19 +843,21 @@ llenarSelect("f_mod", unicos("mod"), "Todas");
 llenarSelect("f_jor", unicos("jor"), "Todas");
 
 function estado(min){
+  if(!Number.isFinite(min)) return "sinref";
   if(!HAY_DATOS) return "sin";
   const d = PUNTAJE - min;
   return d>=0 ? "si" : d>=-MARGEN_CERCA ? "cerca" : "reto";
 }
-const TXT_ESTADO = {si:["i-check","Igual o sobre referencia JE4"], cerca:["i-sube","Muy cerca"], reto:["i-meta","Meta exigente"], sin:["i-calc","Calcula tu puntaje"]};
+const TXT_ESTADO = {sinref:["i-estrella","Sin referencia JE4"],si:["i-check","Igual o sobre referencia JE4"], cerca:["i-sube","Muy cerca"], reto:["i-meta","Meta exigente"], sin:["i-calc","Calcula tu puntaje"]};
 
+function arteInteres(c){const n=Object.keys(CAMPOS).indexOf(c);return `<span class="interes-arte" aria-hidden="true"><img src="assets/intereses/interes-${n}.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>`;}
 function pintarIntereses(){
   $("intereses").innerHTML = Object.keys(CAMPOS).filter(c=>OFERTA.some(o=>o.campo===c)).map(c=>{
     const k = CAMPOS[c], total = OFERTA.filter(o=>o.campo===c).length;
-    const si = OFERTA.filter(o=>o.campo===c && PUNTAJE>=o.min).length;
+    const sinRef = OFERTA.filter(o=>o.campo===c && o.min===null).length;
     return `<button type="button" class="interes" data-campo="${esc(c)}" aria-pressed="${filtroCampo===c}">
-      <span class="ico">${ico(k.i)}</span><b>${k.n}</b><small>${k.d}</small>
-      <span class="cuenta">${HAY_DATOS ? `${si} de ${total} con referencia histórica igual o menor` : `${total} programas`}</span></button>`;
+      ${arteInteres(c)}<b>${k.n}</b><small>${k.d}</small>
+      <span class="cuenta">${total} programas${sinRef?` · ${sinRef} sin referencia JE4`:""}</span></button>`;
   }).join("");
   $("aviso_puntaje").innerHTML = HAY_DATOS
     ? `Tu puntaje <b class="n">${PUNTAJE}</b> <button type="button" class="btn fant" data-ir="puntaje" style="padding:4px 8px">Ajustar</button>`
@@ -866,12 +870,14 @@ function filtrados(){
   const soloAlcance = $("f_alcance").checked && HAY_DATOS;
   const l = OFERTA.filter(o =>
     (!filtroCampo || o.campo===filtroCampo) && (!nivel || o.nivel===nivel) && (!mod || o.mod===mod) && (!jor || o.jor===jor) &&
-    (!txt || sinTildes(o.p+" "+o.i).includes(txt)) && (!soloAlcance || PUNTAJE>=o.min));
+    (!txt || sinTildes(o.p+" "+o.i).includes(txt)) && (!soloAlcance || Number.isFinite(o.min) && PUNTAJE>=o.min));
   const orden = $("f_orden").value;
-  if(orden==="cupos") l.sort((a,b)=>b.cupos-a.cupos || a.p.localeCompare(b.p,"es"));
+  if(orden==="sinref") l.sort((a,b)=>(b.min===null)-(a.min===null) || a.p.localeCompare(b.p,"es"));
+  else if(orden==="cupos") l.sort((a,b)=>b.cupos-a.cupos || a.p.localeCompare(b.p,"es"));
   else if(orden==="az") l.sort((a,b)=>a.p.localeCompare(b.p,"es") || a.i.localeCompare(b.i,"es"));
   else l.sort((a,b)=>{
     // Primero lo alcanzable más exigente, luego lo que está más cerca por encima de tu puntaje.
+    if(a.min===null || b.min===null) return (a.min===null)-(b.min===null) || a.p.localeCompare(b.p,"es");
     const da = PUNTAJE-a.min, db = PUNTAJE-b.min;
     if((da>=0)!==(db>=0)) return da>=0 ? -1 : 1;
     return Math.abs(da)-Math.abs(db) || b.cupos-a.cupos;
@@ -892,14 +898,15 @@ function tarjeta(o){
     ${logoUniversidad(o.i)}
     <h3>${esc(o.p)}</h3>
     <div class="ies">${esc(o.i)}</div>
-    <div class="chips"><span class="chip">${esc(o.nivel)}</span><span class="chip">${esc(o.mod)}</span><span class="chip">${esc(o.jor)}</span></div>
+    <div class="chips"><span class="chip">${esc(o.nivel)}</span><span class="chip">${o.mod==="Sin dato"?"Modalidad por confirmar":esc(o.mod)}</span><span class="chip">${esc(o.jor)}</span></div>
     <span class="estado ${st}">${ico(ic)} ${et}${det?` <span class="x">· ${det}</span>`:""}</span>
-    <div class="regla-min" role="img" aria-label="Mínimo JE4 ${o.min} de 100${HAY_DATOS?`, tu puntaje ${PUNTAJE}`:""}">
+    ${o.min===null ? `<p class="sin-referencia">Esta oferta JE6 no tiene un puntaje de referencia JE4. Puedes explorarla y guardarla entre tus opciones.</p>` : `<div class="regla-min" role="img" aria-label="Mínimo JE4 ${o.min} de 100${HAY_DATOS?`, tu puntaje ${PUNTAJE}`:""}">
       ${HAY_DATOS?`<span class="rel" style="width:${PUNTAJE}%"></span>`:""}
       <span class="m" style="left:${o.min}%"></span>
       ${HAY_DATOS?`<span class="yo" style="left:${PUNTAJE}%"></span>`:""}
     </div>
     <div class="leyenda-min"><span>Último elegible JE4: <b>${o.min}</b></span>${HAY_DATOS?`<span>Tú: <b>${PUNTAJE}</b></span>`:""}</div>
+    `}
     <div class="pie">
       <span class="cupos"><b>${o.cupos}</b> ${o.cupos===1?"cupo":"cupos"} en JE6</span>
       <button type="button" class="elegir" data-id="${o.id}" aria-pressed="${sel}" ${lleno?'disabled title="Ya elegiste 3 programas"':""}>${ico("i-estrella")}${sel?"Elegida":"Elegir"}</button>
@@ -909,8 +916,8 @@ function tarjeta(o){
 
 function pintarCarreras(){
   pintarIntereses();
-  const l = filtrados(), si = l.filter(o=>PUNTAJE>=o.min).length;
-  $("resumen").innerHTML = l.length===0 ? "" : HAY_DATOS ? `<b>${l.length}</b> programas · <b>${si}</b> con referencia histórica igual o menor` : `<b>${l.length}</b> programas`;
+  const l = filtrados(), si = l.filter(o=>Number.isFinite(o.min) && PUNTAJE>=o.min).length;
+  $("resumen").innerHTML = l.length===0 ? "" : HAY_DATOS ? `<b>${l.length}</b> programas · <b>${l.filter(o=>o.min===null).length}</b> sin referencia JE4 · <b>${si}</b> con referencia ≤ tu puntaje` : `<b>${l.length}</b> programas`;
   $("programas").innerHTML = l.length===0
     ? `<div class="vacio">No hay programas con esos filtros. Prueba quitando alguno${$("f_alcance").checked?" o desmarca «Referencia JE4 ≤ mi puntaje»":""}.</div>`
     : l.slice(0,visibles).map(tarjeta).join("");
@@ -927,7 +934,7 @@ function pintarOpciones(){
     if(!o) return `<li class="libre"><span class="orden-n">${i+1}</span><span class="txt">Opción ${i+1} libre. <a href="#carreras" data-ir="carreras">Elige una carrera</a>.</span></li>`;
     const st = estado(o.min), [, et] = TXT_ESTADO[st];
     return `<li><span class="orden-n">${i+1}</span>
-      <span class="txt">${logoUniversidad(o.i)}<b>${esc(o.p)}</b><span>${esc(o.i)} · mínimo JE4 ${o.min}${HAY_DATOS?` · ${et}`:""}</span></span>
+      <span class="txt">${logoUniversidad(o.i)}<b>${esc(o.p)}</b><span>${esc(o.i)} · ${o.min===null?"Sin referencia JE4":`mínimo JE4 ${o.min}`}${HAY_DATOS?` · ${et}`:""}</span></span>
       <button type="button" class="mini" data-mover="${i}" data-dir="-1" ${i===0?"disabled":""} aria-label="Subir">${ico("i-arriba")}<span>Subir</span></button>
       <button type="button" class="mini" data-mover="${i}" data-dir="1" ${i===elegidos.length-1?"disabled":""} aria-label="Bajar">${ico("i-abajo")}<span>Bajar</span></button>
       <button type="button" class="mini" data-quitar="${o.id}" aria-label="Quitar">${ico("i-x")}<span>Quitar</span></button></li>`;
@@ -954,7 +961,7 @@ window.addEventListener("popstate", ()=>irA(location.hash.slice(1), false));
 document.addEventListener("click", ev=>{
   const b = ev.target.closest("[data-ir]"); if(!b) return;
   ev.preventDefault();
-  if(b.dataset.ir==="carreras" && b.closest("[data-paso='4']") && HAY_DATOS){ $("f_alcance").checked = true; visibles=24; pintarCarreras(); }
+  if(b.dataset.ir==="carreras" && b.closest("[data-paso='4']") && HAY_DATOS){ $("f_alcance").checked = false; visibles=24; pintarCarreras(); }
   irA(b.dataset.ir);
 });
 
@@ -1017,7 +1024,7 @@ $("total-instituciones").textContent = institucionesInicio.length;
 $("universidades-inicio").innerHTML = institucionesInicio.map(nombre=>`<button class="university-choice" data-universidad="${esc(nombre)}" aria-label="Ver programas de ${esc(nombre)}">${logoUniversidad(nombre)}<span>${esc(nombre)}</span><small>${OFERTA.filter(o=>o.i===nombre).length} programas <b aria-hidden="true">↗</b></small></button>`).join("");
 $("universidades-inicio").addEventListener("click",ev=>{const b=ev.target.closest("[data-universidad]");if(!b)return;filtroCampo=null;["f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");$("f_texto").value=b.dataset.universidad;$("f_alcance").checked=false;visibles=24;pintarCarreras();irA("carreras");$("tab-carreras").focus();});
 $("explorar-inicio").addEventListener("click",()=>{$("descubre-titulo").setAttribute("tabindex","-1");$("descubre-titulo").focus({preventScroll:true});$("descubre").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});});
-$("inicio-intereses").innerHTML = Object.entries(CAMPOS).filter(([c])=>OFERTA.some(o=>o.campo===c)).map(([c,k],i)=>`<button class="interest-tile" data-inicio-campo="${esc(c)}"><span class="tile-top">${ico(k.i)}<span>↗</span></span><b>${k.n}</b><small>${k.d}</small><span class="tile-count">${OFERTA.filter(o=>o.campo===c).length} programas</span></button>`).join("");
+$("inicio-intereses").innerHTML = Object.entries(CAMPOS).filter(([c])=>OFERTA.some(o=>o.campo===c)).map(([c,k],i)=>`<button class="interest-tile" data-inicio-campo="${esc(c)}">${arteInteres(c)}<b>${k.n}</b><small>${k.d}</small><span class="tile-count">${OFERTA.filter(o=>o.campo===c).length} programas</span></button>`).join("");
 $("inicio-intereses").addEventListener("click",ev=>{const b=ev.target.closest("[data-inicio-campo]");if(!b)return;filtroCampo=b.dataset.inicioCampo;["f_texto","f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");$("f_alcance").checked=false;visibles=24;pintarCarreras();irA("carreras");$("tab-carreras").focus();});
 $("movimiento").addEventListener("click",()=>{const paused=document.body.classList.toggle("motion-paused");$("movimiento").setAttribute("aria-pressed",paused);$("movimiento").textContent=paused?"Activar movimiento":"Pausar movimiento";});
 todo();
