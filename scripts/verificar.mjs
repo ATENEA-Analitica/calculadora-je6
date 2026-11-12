@@ -78,7 +78,7 @@ run('S=VACIO();S.e={etnia:true};calcular();filtroCampo=Object.keys(CAMPOS)[0]');
 node("f_texto").value="búsqueda anterior";node("f_nivel").value="otro";node("selector-intereses").open=true;
 run("abrirComparacion()");
 assert.equal(node("f_texto").value,"");assert.equal(node("f_nivel").value,"");
-assert.equal(node("selector-intereses").open,false);assert.equal(node("f_alcance").checked,true);
+assert.equal(node("selector-intereses").open,true);assert.equal(node("f_alcance").checked,true);
 assert.equal(run("filtrados().length"),run("OFERTA.filter(o=>Number.isFinite(o.min)&&o.min<=PUNTAJE).length"));
 assert.equal(node("comparacion-activa").hidden,false);assert.equal(node("carreras").hidden,false);
 node("ver-toda-oferta").listeners.click();assert.equal(run("filtrados().length"),214);assert.equal(node("comparacion-activa").hidden,true);

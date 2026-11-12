@@ -485,7 +485,7 @@
       <div class="aviso-puntaje" id="aviso_puntaje"></div>
     </div>
 
-    <details id="selector-intereses" class="selector-intereses"><summary>Filtrar por área de interés <span id="interes-activo"></span></summary><div class="intereses" id="intereses" role="group" aria-label="Áreas de interés"></div></details>
+    <details id="selector-intereses" class="selector-intereses" open><summary>Filtrar por área de interés <span id="interes-activo"></span></summary><div class="intereses" id="intereses" role="group" aria-label="Áreas de interés"></div></details>
     <div id="comparacion-activa" class="comparacion-activa" hidden></div>
     <button type="button" class="btn fant" id="ver-toda-oferta" hidden>Ver toda la oferta JE6, incluida la que no tiene referencia</button>
 
@@ -938,7 +938,6 @@ function abrirComparacion(){
   ["f_texto","f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");
   $("f_alcance").checked=HAY_DATOS;
   $("f_orden").value=HAY_DATOS?"cerca":"az";
-  $("selector-intereses").open=false;
   visibles=24;pintarCarreras();irA("carreras");
   $("titulo-carreras").focus({preventScroll:true});
 }
