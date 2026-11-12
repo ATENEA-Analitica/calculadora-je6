@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Explora tu futuro · Jóvenes a la E 6 · Atenea</title>
 <meta name="description" content="Calcula tu puntaje para la sexta convocatoria de Jóvenes a la E y explora carreras y compara referencias históricas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -418,7 +418,7 @@
             </div>
           </div>
           <div class="error" id="e_saber"></div>
-          <div id="t_saber"></div>
+          <div id="t_saber" tabindex="0" role="region" aria-label="Tabla de rangos de Saber 11; desplázala horizontalmente para consultar todos los rangos"></div>
           <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl>
             <dt>Fuente</dt><dd>ICFES. Solo cuentan exámenes en estado «PUBLICADO».</dd>
             <dt>Prueba con ajustes razonables</dt><dd>Si presentaste el cuadernillo con ajustes razonables para población con discapacidad, se usa el percentil que el ICFES reporta para esa versión de la prueba.</dd>
@@ -764,10 +764,10 @@ function pintarSaber(){
 const NOMBRES_PASO = ["Quién eres","Tu hogar","Saber 11","Tu camino","Resultado"];
 function pintarPasos(){
   const pts = [PARTES.e, PARTES.ec, PARTES.m, PARTES.t];
-  $("pasos").innerHTML = NOMBRES_PASO.map((n,i)=>`<button type="button" class="pasito ${i<paso?"hecho":""}" data-ir-paso="${i}" ${i===paso?'aria-current="step"':""}>
+  $("pasos").innerHTML = NOMBRES_PASO.map((n,i)=>`<button type="button" class="pasito ${i<paso?"hecho":""}" data-ir-paso="${i}" aria-label="${i+1}. ${n}" ${i===paso?'aria-current="step"':""}>
       <span class="n">${i<paso?ico("i-check","i"):i+1}</span><span class="lbl">${n}${i<4?`<small>${pts[i]} / ${[15,40,40,5][i]} pts</small>`:`<small>${PUNTAJE} pts</small>`}</span></button>`).join("");
   $$("[data-paso]").forEach(el=>el.hidden = +el.dataset.paso!==paso);
-  $("atras").style.visibility = paso===0 ? "hidden" : "visible";
+  $("atras").hidden = paso===0;
   $("navega").hidden = paso===4;
   $("portada").hidden = paso!==0;
   $("rejilla").classList.toggle("final", paso===4);
@@ -928,9 +928,9 @@ function pintarOpciones(){
     const st = estado(o.min), [, et] = TXT_ESTADO[st];
     return `<li><span class="orden-n">${i+1}</span>
       <span class="txt">${logoUniversidad(o.i)}<b>${esc(o.p)}</b><span>${esc(o.i)} · mínimo JE4 ${o.min}${HAY_DATOS?` · ${et}`:""}</span></span>
-      <button type="button" class="mini" data-mover="${i}" data-dir="-1" ${i===0?"disabled":""} aria-label="Subir">${ico("i-arriba")}</button>
-      <button type="button" class="mini" data-mover="${i}" data-dir="1" ${i===elegidos.length-1?"disabled":""} aria-label="Bajar">${ico("i-abajo")}</button>
-      <button type="button" class="mini" data-quitar="${o.id}" aria-label="Quitar">${ico("i-x")}</button></li>`;
+      <button type="button" class="mini" data-mover="${i}" data-dir="-1" ${i===0?"disabled":""} aria-label="Subir">${ico("i-arriba")}<span>Subir</span></button>
+      <button type="button" class="mini" data-mover="${i}" data-dir="1" ${i===elegidos.length-1?"disabled":""} aria-label="Bajar">${ico("i-abajo")}<span>Bajar</span></button>
+      <button type="button" class="mini" data-quitar="${o.id}" aria-label="Quitar">${ico("i-x")}<span>Quitar</span></button></li>`;
   }).join("");
 }
 
