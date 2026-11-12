@@ -1,2 +1,5 @@
 # Documentos fuente (no se versionan)
 *.pdf
+*.xlsx
+~$*
+__pycache__/

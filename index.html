@@ -3,269 +3,621 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calculadora de puntaje · Jóvenes a la E 6 · IES privadas</title>
+<title>Calcula tu puntaje · Jóvenes a la E 6</title>
+<meta name="description" content="Calcula tu puntaje para la sexta convocatoria de Jóvenes a la E y descubre qué carreras están a tu alcance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* ====== LÍNEA GRÁFICA: ajuste aquí los colores y la tipografía del manual de marca ====== */
   :root{
-    --marca: #1f2a5c;        /* color principal */
-    --marca-2: #3d4fa3;      /* color secundario */
-    --acento: #e2530a;       /* naranja de la franja superior */
-    --tinta: #1c2130;
-    --tinta-2: #5a6275;
-    --fondo: #f4f5f9;
-    --tarjeta: #ffffff;
-    --linea: #dfe2ec;
-    --suave: #eef0f8;
-    --ok: #1d7a4f;
-    --alerta: #b3261e;
-    --fuente: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --marca:#1f2a5c; --marca-2:#3d4fa3; --marca-suave:#e9ecf8;
+    --acento:#e2530a; --acento-2:#f47b20; --acento-suave:#fff1e8;
+    --tinta:#1c2130; --tinta-2:#4f586c; --tinta-3:#7a8296;
+    --fondo:#f5f6fa; --tarjeta:#fff; --linea:#e2e5ee;
+    --ok:#1d7a4f; --ok-suave:#e3f3ea; --cerca:#8a5a00; --cerca-suave:#fdf2d8; --alerta:#b3261e;
+    --radio:16px; --sombra:0 8px 28px rgba(31,42,92,.08);
+    --titulos:"Montserrat","Segoe UI",Arial,sans-serif;
+    --fuente:"Nunito Sans","Segoe UI","Helvetica Neue",Arial,sans-serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:var(--fuente);color:var(--tinta);background:var(--fondo);line-height:1.5;font-size:15px}
-  header{background:var(--acento);color:#fff;border-bottom:6px solid var(--marca)}
-  .cab{max-width:1180px;margin:0 auto;padding:22px 20px;display:flex;gap:18px;align-items:center}
-  header h1{margin:0;font-size:22px;line-height:1.25;font-weight:700}
-  header p{margin:4px 0 0;font-size:14px;color:#fff}
-  main{max-width:1180px;margin:0 auto;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:22px;align-items:start}
-  .aviso{grid-column:1/-1;background:#fff4ec;border:1px solid #f3c6a8;border-left:5px solid var(--acento);border-radius:8px;padding:12px 16px;font-size:14px}
-  .tarjeta{background:var(--tarjeta);border:1px solid var(--linea);border-radius:10px;margin-bottom:18px;overflow:hidden}
-  .tarjeta > h2{margin:0;padding:14px 18px;background:var(--suave);font-size:16px;color:var(--marca);display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--linea)}
-  .tarjeta > h2 span{font-size:12.5px;font-weight:600;color:var(--tinta-2)}
-  .regla{padding:12px 18px;font-size:13.5px;color:var(--tinta-2);border-bottom:1px solid var(--linea);background:#fbfbfd}
-  .fila{display:grid;grid-template-columns:minmax(0,1fr) 190px 54px;gap:12px;align-items:start;padding:12px 18px;border-bottom:1px solid var(--linea)}
-  .fila:last-child{border-bottom:0}
-  .fila label{font-weight:600;display:block}
-  .alcance{font-size:13px;color:var(--tinta-2);margin-top:3px}
-  .alcance b{color:var(--tinta)}
-  select,input[type=number]{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #b9bfd2;border-radius:6px;background:#fff;color:var(--tinta)}
-  select:focus,input:focus{outline:3px solid rgba(61,79,163,.3);border-color:var(--marca-2)}
-  select:disabled{background:#eceef3;color:#8b90a0}
-  .pts{font-weight:700;text-align:right;font-variant-numeric:tabular-nums;padding-top:8px;color:var(--tinta-2)}
-  .pts.on{color:var(--ok)}
-  .error{color:var(--alerta);font-size:13px;margin-top:4px;font-weight:600}
-  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:6px}
-  th,td{border:1px solid var(--linea);padding:4px 8px;text-align:center}
-  th{background:var(--suave);color:var(--marca)}
-  tr.activa td{background:#e3f3ea;font-weight:700}
-  details{padding:0 18px;border-bottom:1px solid var(--linea)}
-  details:last-child{border-bottom:0}
-  summary{cursor:pointer;padding:12px 0;font-weight:600;color:var(--marca)}
-  details > div{padding:0 0 14px;font-size:13.5px;color:var(--tinta-2)}
-  details ol,details ul{margin:6px 0;padding-left:20px}
-  aside{position:sticky;top:14px}
-  .res{background:var(--tarjeta);border:1px solid var(--linea);border-top:6px solid var(--marca);border-radius:10px;padding:18px}
-  .res h2{margin:0;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-2)}
-  .total{display:flex;align-items:baseline;gap:6px;margin:4px 0 12px}
-  .total strong{font-size:58px;line-height:1;color:var(--marca);font-variant-numeric:tabular-nums}
-  .total span{font-size:18px;color:var(--tinta-2)}
-  .barra{margin:12px 0}
-  .barra .t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600}
-  .barra .t b{font-variant-numeric:tabular-nums}
-  .riel{height:9px;background:var(--suave);border-radius:5px;overflow:hidden;margin:4px 0}
-  .riel i{display:block;height:100%;background:var(--marca-2);border-radius:5px;transition:width .2s}
-  .calc{font-size:12.5px;color:var(--tinta-2)}
-  .nota{font-size:12.5px;color:var(--tinta-2);border-top:1px solid var(--linea);margin-top:14px;padding-top:12px}
-  .botones{display:flex;gap:8px;margin-top:14px}
-  button{font:inherit;font-weight:600;padding:8px 14px;border-radius:6px;border:1.5px solid var(--marca);background:#fff;color:var(--marca);cursor:pointer;flex:1}
-  button.pri{background:var(--marca);color:#fff}
-  footer{max-width:1180px;margin:0 auto;padding:0 20px 30px;font-size:12.5px;color:var(--tinta-2)}
+  body{margin:0;font-family:var(--fuente);color:var(--tinta);background:var(--fondo);line-height:1.5;font-size:16px;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:var(--titulos);line-height:1.2;margin:0}
+  button{font:inherit;cursor:pointer;color:inherit}
+  a{color:var(--marca-2)}
+  svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  :focus-visible{outline:3px solid rgba(61,79,163,.4);outline-offset:2px}
+  .envoltura{max-width:1160px;margin:0 auto;padding:0 20px}
+  [hidden]{display:none!important}
+
+  /* ---------- Barra superior con pestañas ---------- */
+  .barra{position:sticky;top:0;z-index:20;background:var(--marca);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+  .barra .envoltura{display:flex;align-items:center;gap:18px;height:64px}
+  .marca{display:flex;align-items:center;gap:10px;font-family:var(--titulos);font-weight:800;font-size:17px;white-space:nowrap}
+  .marca .logo{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--acento);font-size:15px}
+  .marca small{display:block;font-family:var(--fuente);font-weight:600;font-size:12px;opacity:.8}
+  .pestanas{display:flex;gap:4px;margin-left:auto;height:100%}
+  .pestana{display:flex;align-items:center;gap:8px;border:0;background:none;color:#cfd5f0;font-weight:700;padding:0 14px;height:100%;border-bottom:3px solid transparent;font-size:15px}
+  .pestana:hover{color:#fff}
+  .pestana[aria-selected="true"]{color:#fff;border-bottom-color:var(--acento-2)}
+  .pestana .cont{background:var(--acento);color:#fff;border-radius:999px;font-size:12px;padding:0 7px;min-width:20px;text-align:center}
+  .pildora{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 6px 5px 14px;font-weight:700;white-space:nowrap}
+  .pildora b{display:grid;place-items:center;min-width:42px;height:32px;border-radius:999px;background:var(--acento);font-family:var(--titulos);font-size:17px;padding:0 8px}
+
+  main.envoltura{padding-top:26px;padding-bottom:40px}
+  .panel-tab{animation:entra .25s ease}
+  @keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- Portada compacta ---------- */
+  .portada{background:linear-gradient(120deg,var(--acento) 0%,#c2410c 60%,#8c2f39 100%);color:#fff;border-radius:22px;padding:28px 30px;position:relative;overflow:hidden;margin-bottom:22px}
+  .portada::after{content:"";position:absolute;right:-60px;top:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.09)}
+  .portada::before{content:"";position:absolute;right:90px;bottom:-110px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .portada h1{font-size:clamp(24px,3.6vw,36px);font-weight:800;max-width:700px;position:relative;z-index:1}
+  .portada p{margin:8px 0 0;max-width:640px;font-size:clamp(15px,1.8vw,17.5px);position:relative;z-index:1}
+
+  /* ---------- Asistente ---------- */
+  .rejilla{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px;align-items:start}
+  .pasos{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+  .pasos::-webkit-scrollbar{display:none}
+  .pasito{flex:1;min-width:120px;display:flex;align-items:center;gap:9px;border:1.5px solid var(--linea);background:var(--tarjeta);border-radius:12px;padding:9px 11px;text-align:left;font-weight:700;font-size:14px;color:var(--tinta-2)}
+  .pasito .n{display:grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;background:var(--marca-suave);color:var(--marca);font-size:13px}
+  .pasito.hecho .n{background:var(--ok);color:#fff}
+  .pasito[aria-current="step"]{border-color:var(--acento);color:var(--marca);box-shadow:0 0 0 3px rgba(226,83,10,.12)}
+  .pasito[aria-current="step"] .n{background:var(--acento);color:#fff}
+  .pasito small{display:block;font-weight:600;font-size:12px;color:var(--tinta-3)}
+
+  .tarjeta{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);box-shadow:var(--sombra)}
+  .paso{padding:24px}
+  .paso-cab{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .paso-cab .ico{display:grid;place-items:center;flex:none;width:50px;height:50px;border-radius:14px;background:var(--acento-suave);color:var(--acento)}
+  .paso-cab .ico svg.i{width:26px;height:26px}
+  .paso-cab h2{font-size:22px;color:var(--marca)}
+  .paso-cab p{margin:4px 0 0;color:var(--tinta-2)}
+  .tope{margin-left:auto;flex:none;font-size:13px;font-weight:700;color:var(--marca);background:var(--marca-suave);border-radius:999px;padding:5px 12px;white-space:nowrap}
+  .nota{font-size:14px;color:var(--tinta-2);background:#fafbfd;border:1px dashed var(--linea);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+
+  .fichas{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .ficha{position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;background:#fff;border:1.5px solid var(--linea);border-radius:14px;padding:13px 14px 12px 46px;min-height:64px;transition:border-color .15s,background .15s,box-shadow .15s}
+  .ficha:hover{border-color:var(--marca-2)}
+  .ficha::before{content:"";position:absolute;left:14px;top:15px;width:20px;height:20px;border-radius:6px;border:2px solid #b9bfd2;background:#fff}
+  .ficha.radio::before{border-radius:50%}
+  .ficha[aria-checked="true"]{border-color:var(--acento);background:#fffaf6;box-shadow:0 0 0 3px rgba(226,83,10,.12)}
+  .ficha[aria-checked="true"]::before{background:var(--acento) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat;border-color:var(--acento)}
+  .ficha[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+  .ficha .t{font-weight:700;line-height:1.3;padding-right:44px}
+  .ficha .p{position:absolute;right:12px;top:12px;font-family:var(--titulos);font-weight:800;font-size:14px;color:var(--marca-2);background:var(--marca-suave);border-radius:999px;padding:2px 9px}
+  .ficha[aria-checked="true"] .p{background:var(--acento);color:#fff}
+  .ficha .d{font-size:13px;color:var(--tinta-3);line-height:1.35}
+  .ficha select{margin-top:6px;font:inherit;font-size:14px;padding:6px 8px;border:1.5px solid #c7ccdb;border-radius:8px;background:#fff;width:100%}
+  details.como{margin-top:16px;border-top:1px solid var(--linea);padding-top:12px}
+  details.como summary{cursor:pointer;font-weight:700;color:var(--marca-2);font-size:14.5px}
+  details.como dl{margin:10px 0 0;font-size:13.5px;color:var(--tinta-2);display:grid;gap:8px}
+  details.como dt{font-weight:700;color:var(--tinta)}
+  details.como dd{margin:0}
+
+  .segmento{display:inline-flex;background:var(--marca-suave);border-radius:12px;padding:4px;margin-bottom:16px}
+  .segmento button{border:0;background:none;border-radius:9px;padding:8px 16px;font-weight:700;color:var(--marca)}
+  .segmento button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .saber{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center}
+  .saber input[type=number]{width:100%;font-family:var(--titulos);font-weight:800;font-size:30px;text-align:center;padding:10px;border:2px solid #c7ccdb;border-radius:14px;color:var(--marca)}
+  .saber input[type=range]{width:100%;accent-color:var(--acento);height:28px}
+  .saber label{display:block;font-weight:700;margin-bottom:6px}
+  .error{color:var(--alerta);font-size:14px;font-weight:700;margin-top:6px;min-height:1px}
+  table.rangos{border-collapse:separate;border-spacing:3px;width:100%;font-size:13px;margin-top:14px}
+  table.rangos th,table.rangos td{background:var(--fondo);border-radius:6px;padding:5px 3px;text-align:center}
+  table.rangos th{color:var(--tinta-2);font-weight:700}
+  table.rangos td{font-family:var(--titulos);font-weight:700;color:var(--marca)}
+  table.rangos .activa{background:var(--acento);color:#fff}
+
+  .navega{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;padding:11px 20px;border-radius:12px;border:2px solid var(--marca);background:#fff;color:var(--marca);text-decoration:none;font-size:15.5px}
+  .btn.pri{background:var(--acento);border-color:var(--acento);color:#fff}
+  .btn.pri:hover{background:#c9480a;border-color:#c9480a}
+  .btn.osc{background:var(--marca);color:#fff}
+  .btn.fant{border-color:transparent;background:none;color:var(--tinta-2)}
+
+  /* ---------- Medidor ---------- */
+  aside.lateral{position:sticky;top:84px}
+  .rejilla.final{grid-template-columns:1fr}
+  .rejilla.final aside.lateral{display:none}
+  .medidor-caja{padding:20px}
+  .medidor-caja h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--tinta-2);font-family:var(--fuente)}
+  .medidor{position:relative;width:180px;height:180px;margin:8px auto}
+  .medidor.grande{width:230px;height:230px}
+  .medidor svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .medidor .fondo{stroke:var(--marca-suave)}
+  .medidor .valor{stroke:url(#degradado);transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1)}
+  .medidor .centro{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+  .medidor strong{font-family:var(--titulos);font-size:54px;font-weight:800;line-height:1;color:var(--marca)}
+  .medidor.grande strong{font-size:70px}
+  .medidor span{font-size:14px;color:var(--tinta-2)}
+  .desglose{display:grid;gap:9px;margin-top:6px}
+  .linea-c .t{display:flex;justify-content:space-between;font-size:14px;font-weight:700}
+  .linea-c .t b{color:var(--tinta-2);font-variant-numeric:tabular-nums}
+  .riel{height:8px;background:var(--marca-suave);border-radius:4px;overflow:hidden;margin-top:4px}
+  .riel i{display:block;height:100%;background:var(--marca-2);border-radius:4px;transition:width .4s}
+  .mensaje{margin-top:16px;border-radius:14px;padding:14px 16px;background:var(--ok-suave);color:#14563a;font-size:15px}
+  .mensaje.neutro{background:var(--acento-suave);color:#7a2e05}
+  .mensaje b.g{display:block;font-family:var(--titulos);font-size:28px;font-weight:800;color:var(--ok);line-height:1.1;margin-bottom:2px}
+  .mensaje.neutro b.g{color:var(--acento)}
+
+  /* ---------- Resultado ---------- */
+  .resultado{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:center;padding:26px}
+  .resultado h2{font-size:clamp(22px,3vw,30px);color:var(--marca);margin-bottom:6px}
+  .resultado .acc-btn{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .acciones{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:18px}
+  .accion{display:flex;gap:12px;background:var(--tarjeta);border:1px solid var(--linea);border-radius:14px;padding:14px}
+  .accion .ico{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:10px;background:var(--marca-suave);color:var(--marca-2)}
+  .accion h4{font-size:15px;color:var(--marca);margin-bottom:3px}
+  .accion p{margin:0;font-size:14px;color:var(--tinta-2)}
+  .sub{font-family:var(--titulos);font-size:19px;color:var(--marca);margin:28px 0 4px}
+
+  /* ---------- Carreras ---------- */
+  .cab-tab{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .cab-tab h1{font-size:clamp(24px,3vw,32px);color:var(--marca)}
+  .cab-tab p{margin:6px 0 0;color:var(--tinta-2);max-width:720px}
+  .aviso-puntaje{display:flex;align-items:center;gap:12px;background:var(--tarjeta);border:1px solid var(--linea);border-radius:14px;padding:10px 14px;font-size:14.5px}
+  .aviso-puntaje b.n{font-family:var(--titulos);font-size:24px;color:var(--acento)}
+  .intereses{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:4px 2px 10px;margin-bottom:6px}
+  .interes{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--tarjeta);border:1.5px solid var(--linea);border-radius:14px;padding:12px}
+  .interes:hover{border-color:var(--marca-2)}
+  .interes .ico{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--marca-suave);color:var(--marca-2)}
+  .interes[aria-pressed="true"]{border-color:var(--acento);background:#fffaf6;box-shadow:0 0 0 3px rgba(226,83,10,.13)}
+  .interes[aria-pressed="true"] .ico{background:var(--acento);color:#fff}
+  .interes b{font-family:var(--titulos);font-size:14px;color:var(--marca);line-height:1.25}
+  .interes small{font-size:12.5px;color:var(--tinta-2);line-height:1.35}
+  .interes .cuenta{font-size:12.5px;font-weight:700;color:var(--ok);margin-top:auto}
+  .filtros{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px}
+  .filtros label{font-size:13px;font-weight:700;color:var(--tinta-2);display:block;margin-bottom:4px}
+  .filtros input[type=search],.filtros select,.orden select{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1.5px solid #c7ccdb;border-radius:10px;background:#fff}
+  .btn-filtros{display:none}
+  .interruptor{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;white-space:nowrap;background:#fff;border:1.5px solid #c7ccdb;border-radius:10px;padding:9px 12px;cursor:pointer}
+  .interruptor input{width:18px;height:18px;accent-color:var(--acento);margin:0}
+  .desliza{display:none;font-size:13px;color:var(--tinta-3);margin:-4px 0 10px}
+  .resumen{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:var(--tinta-2)}
+  .resumen b{color:var(--tinta)}
+  .orden{display:flex;align-items:center;gap:8px;font-size:14px}
+  .orden select{width:auto;padding:6px 9px}
+  .programas{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .programa{background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:16px;display:flex;flex-direction:column;gap:9px;transition:box-shadow .15s,transform .15s}
+  .programa:hover{box-shadow:var(--sombra);transform:translateY(-2px)}
+  .programa h3{font-size:16px;color:var(--marca)}
+  .programa .ies{font-size:14px;color:var(--tinta-2);margin-top:-5px}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{font-size:12.5px;font-weight:600;background:var(--fondo);color:var(--tinta-2);border-radius:999px;padding:2px 9px}
+  .estado{display:inline-flex;gap:6px;align-items:center;font-size:13.5px;font-weight:700;border-radius:9px;padding:5px 10px;align-self:flex-start}
+  .estado svg.i{width:16px;height:16px;stroke-width:2.6}
+  .estado.si{background:var(--ok-suave);color:var(--ok)}
+  .estado.cerca{background:var(--cerca-suave);color:var(--cerca)}
+  .estado.reto{background:var(--marca-suave);color:var(--marca-2)}
+  .estado.sin{background:var(--fondo);color:var(--tinta-2)}
+  .estado span.x{font-weight:600}
+  .regla-min{position:relative;height:10px;background:var(--marca-suave);border-radius:5px;margin:12px 0 2px}
+  .regla-min .rel{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:linear-gradient(90deg,rgba(226,83,10,.2),rgba(226,83,10,.55))}
+  .regla-min .m{position:absolute;top:-5px;width:3px;height:20px;margin-left:-1.5px;background:var(--marca);border-radius:2px}
+  .regla-min .yo{position:absolute;top:-6px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--acento);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3)}
+  .leyenda-min{display:flex;justify-content:space-between;font-size:13px;color:var(--tinta-2)}
+  .leyenda-min b{color:var(--tinta)}
+  .programa .pie{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:10px;border-top:1px solid var(--linea)}
+  .cupos{font-size:13.5px;color:var(--tinta-2)}
+  .cupos b{font-family:var(--titulos);color:var(--tinta);font-size:16px}
+  .elegir{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--marca-2);background:#fff;color:var(--marca-2);border-radius:10px;padding:6px 11px;font-weight:700;font-size:14px}
+  .elegir svg.i{width:16px;height:16px}
+  .elegir[aria-pressed="true"]{background:var(--marca-2);color:#fff}
+  .elegir[aria-pressed="true"] svg.i{fill:currentColor}
+  .elegir:disabled{opacity:.4;cursor:not-allowed}
+  .vacio{background:var(--tarjeta);border:2px dashed var(--linea);border-radius:var(--radio);padding:30px;text-align:center;color:var(--tinta-2)}
+  .mas{display:flex;margin:18px auto 0}
+
+  /* ---------- Mis opciones ---------- */
+  .opciones{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:22px;align-items:start}
+  ol.mias{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  ol.mias li{display:flex;gap:14px;align-items:center;background:var(--tarjeta);border:1px solid var(--linea);border-radius:var(--radio);padding:16px;box-shadow:var(--sombra)}
+  ol.mias .orden-n{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;background:var(--acento);color:#fff;font-family:var(--titulos);font-weight:800;font-size:18px}
+  ol.mias li.libre{border:2px dashed var(--linea);box-shadow:none;background:transparent;color:var(--tinta-3)}
+  ol.mias li.libre .orden-n{background:var(--marca-suave);color:var(--tinta-3)}
+  ol.mias .txt{flex:1;min-width:0}
+  ol.mias .txt b{display:block;font-family:var(--titulos);color:var(--marca);font-size:15.5px}
+  ol.mias .txt span{font-size:14px;color:var(--tinta-2)}
+  .mini{display:grid;place-items:center;border:1.5px solid var(--linea);background:#fff;border-radius:9px;width:36px;height:36px;color:var(--tinta-2)}
+  .mini:disabled{opacity:.35;cursor:default}
+  .mini svg.i{width:18px;height:18px}
+  .explica{padding:20px}
+  .explica h3{font-size:17px;color:var(--marca);margin-bottom:8px}
+  .explica ol{padding-left:20px;margin:6px 0 10px;color:var(--tinta-2)}
+  .explica li{margin-bottom:5px}
+  .explica p{color:var(--tinta-2);margin:0}
+  .llamado{margin-top:24px;background:linear-gradient(120deg,var(--marca),var(--marca-2));color:#fff;border-radius:22px;padding:26px 28px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .llamado h2{font-size:clamp(20px,2.6vw,27px);margin-bottom:6px}
+  .llamado p{margin:0;max-width:620px;color:#e3e7f8}
+  .llamado .btn{font-size:17px;padding:13px 26px}
+
+  /* ---------- Dudas ---------- */
+  .dudas{max-width:860px}
+  .dudas details{background:var(--tarjeta);border:1px solid var(--linea);border-radius:14px;padding:0 18px;margin-bottom:10px}
+  .dudas summary{cursor:pointer;padding:15px 0;font-family:var(--titulos);font-weight:700;color:var(--marca);font-size:15.5px}
+  .dudas details > div{padding:0 0 16px;color:var(--tinta-2);font-size:15px}
+  .dudas ol,.dudas ul{margin:6px 0;padding-left:20px}
+  footer{padding:10px 0 30px;font-size:12.5px;color:var(--tinta-3)}
+
+  /* ---------- Celular: pestañas abajo ---------- */
   @media (max-width:900px){
-    main{grid-template-columns:1fr}
-    aside{position:static;order:-1}
-    .fila{grid-template-columns:1fr 54px}
-    .fila > div:first-child{grid-column:1/-1}
-    .cab{flex-wrap:wrap}
+    .rejilla,.opciones,.resultado{grid-template-columns:1fr}
+    aside.lateral{display:none}
+    .resultado{justify-items:center;text-align:center}
+    .resultado .acc-btn{justify-content:center}
+    .barra .envoltura{height:56px}
+    .pestanas{position:fixed;left:0;right:0;bottom:0;height:64px;margin:0;background:#fff;border-top:1px solid var(--linea);box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:0 4px env(safe-area-inset-bottom)}
+    .pestana{flex:1;flex-direction:column;justify-content:center;gap:2px;color:var(--tinta-3);font-size:12px;padding:0;border-bottom:0;border-top:3px solid transparent;position:relative}
+    .pestana:hover{color:var(--marca)}
+    .pestana[aria-selected="true"]{color:var(--acento);border-top-color:var(--acento)}
+    .pestana .cont{position:absolute;top:6px;left:calc(50% + 6px)}
+    .pildora{margin-left:auto}
+    main.envoltura{padding-bottom:90px}
+    .filtros{grid-template-columns:1fr 1fr}
+    .filtros .buscar{grid-column:1/-1}
+    .intereses{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none}
+    .intereses::-webkit-scrollbar{display:none}
+    .interes{flex:none;width:170px;scroll-snap-align:start}
+    .desliza{display:block!important}
   }
-  @media print{aside{position:static}.botones{display:none}body{background:#fff}details{display:none}}
+  @media (max-width:560px){
+    .envoltura{padding:0 14px}
+    .marca small{display:none}
+    .pildora span{display:none}
+    .portada{padding:22px 20px;border-radius:18px}
+    .paso{padding:18px}
+    .paso-cab{flex-wrap:wrap}
+    .tope{margin-left:64px}
+    .pasito{min-width:auto;flex:none}
+    .pasito small,.pasito .lbl{display:none}
+    .saber{grid-template-columns:1fr}
+    .filtros{grid-template-columns:1fr auto}
+    .filtros .buscar{grid-column:auto}
+    .btn-filtros{display:inline-flex;align-self:end;padding:9px 12px}
+    .filtros .extra{display:none;grid-column:1/-1}
+    .filtros.abierto .extra{display:block}
+    .tope{margin-left:0}
+    .navega .btn{flex:1}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="cab">
-    <div>
-      <h1>Calculadora de puntaje · Jóvenes a la E 6</h1>
-      <p>Línea de admisión general con instituciones de educación superior privadas · Sexta convocatoria</p>
-    </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="degradado" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f47b20"/><stop offset="1" stop-color="#e2530a"/></linearGradient>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8.5 6.5h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M15.5 14.5h.01M8.5 18h.01M12 18h3.5"/></symbol>
+    <symbol id="i-brujula" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m15.8 8.2-2.2 5.4-5.4 2.2 2.2-5.4z"/></symbol>
+    <symbol id="i-estrella" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+    <symbol id="i-ayuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 4M12 17.5h.01"/></symbol>
+    <symbol id="i-persona" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v12h13V9"/><path d="M10 21v-6h4v6"/></symbol>
+    <symbol id="i-libro" viewBox="0 0 24 24"><path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v13a2.6 2.6 0 0 0-2.6-2.6H2.5z"/><path d="M21.5 4.5h-6A3.5 3.5 0 0 0 12 8v13a2.6 2.6 0 0 1 2.6-2.6h6.9z"/></symbol>
+    <symbol id="i-sube" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></symbol>
+    <symbol id="i-meta" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-flecha-d" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-flecha-i" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-arriba" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-abajo" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-recarga" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 0 1 14.6-5.9L20.5 8.5M20.5 3.5v5h-5M20.5 12a8.5 8.5 0 0 1-14.6 5.9L3.5 15.5M3.5 20.5v-5h5"/></symbol>
+    <!-- Campos de conocimiento -->
+    <symbol id="c-ing" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></symbol>
+    <symbol id="c-tic" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="11.5" rx="2"/><path d="M2 20h20M9.5 8.5 7.5 10l2 1.5M14.5 8.5l2 1.5-2 1.5"/></symbol>
+    <symbol id="c-adm" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+    <symbol id="c-soc" viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.3 7.6L3 21l1.6-5.3A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></symbol>
+    <symbol id="c-sal" viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/><path d="M6.5 12h3l1.5-2.5 2 5 1.5-2.5h3"/></symbol>
+    <symbol id="c-art" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.8-1.8 0-1.3-1-1.6-1-2.7 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10.5" cy="7.2" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></symbol>
+    <symbol id="c-cie" viewBox="0 0 24 24"><path d="M9 2.5h6M10 2.5v6.5L4.4 19.2A1.5 1.5 0 0 0 5.7 21.5h12.6a1.5 1.5 0 0 0 1.3-2.3L14 9V2.5M7 15h10"/></symbol>
+    <symbol id="c-edu" viewBox="0 0 24 24"><path d="M2 9.5 12 4.5l10 5-10 5z"/><path d="M6 11.5v5c3.5 2.4 8.5 2.4 12 0v-5M22 9.5v6"/></symbol>
+    <symbol id="c-ser" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a14.5 14.5 0 0 1 0 19 14.5 14.5 0 0 1 0-19z"/></symbol>
+    <symbol id="c-agr" viewBox="0 0 24 24"><path d="M5 21c0-9.5 6.2-15.3 16-16-.7 9.8-6.5 16-16 16z"/><path d="M5 21l8.5-8.5"/></symbol>
+  </defs>
+</svg>
+
+<div class="barra">
+  <div class="envoltura">
+    <div class="marca"><span class="logo">JE</span><span>Jóvenes a la E 6<small>Calculadora de puntaje · IES privadas</small></span></div>
+    <nav class="pestanas" role="tablist" aria-label="Secciones">
+      <button class="pestana" role="tab" id="tab-puntaje" aria-controls="puntaje" data-tab="puntaje"><svg class="i"><use href="#i-calc"/></svg>Mi puntaje</button>
+      <button class="pestana" role="tab" id="tab-carreras" aria-controls="carreras" data-tab="carreras"><svg class="i"><use href="#i-brujula"/></svg>Carreras</button>
+      <button class="pestana" role="tab" id="tab-opciones" aria-controls="opciones" data-tab="opciones"><svg class="i"><use href="#i-estrella"/></svg>Mis opciones <span class="cont" id="n_opc" hidden>0</span></button>
+      <button class="pestana" role="tab" id="tab-dudas" aria-controls="dudas" data-tab="dudas"><svg class="i"><use href="#i-ayuda"/></svg>Dudas</button>
+    </nav>
+    <div class="pildora" aria-live="polite"><span>Tu puntaje</span><b id="pild">0</b></div>
   </div>
-</header>
+</div>
 
-<main>
-  <div class="aviso">
-    <b>Resultado informativo.</b> Esta calculadora aplica los criterios de puntuación de la Tabla 5 del Lineamiento Operativo dirigido a aspirantes (L57_EP, versión 2, 11/11/2026). El puntaje definitivo lo asigna la Agencia Atenea después de verificar la información con fuentes oficiales, y un puntaje alto no garantiza cupo.
-  </div>
+<main class="envoltura">
 
-  <section id="form">
-
-    <!-- 1 -->
-    <div class="tarjeta">
-      <h2>1. Vulnerabilidad estructural <span>Acumulable · hasta 15 puntos</span></h2>
-      <div class="regla">Criterio acumulativo hasta 15 puntos: aunque se cuente con varias de las características, solo se suma puntaje hasta alcanzar ese límite.</div>
-      <div id="estructural"></div>
+  <!-- ===================== MI PUNTAJE ===================== -->
+  <section class="panel-tab" role="tabpanel" id="puntaje" aria-labelledby="tab-puntaje">
+    <div class="portada" id="portada">
+      <h1>Tu carrera puede estar más cerca de lo que crees</h1>
+      <p>Responde cuatro preguntas cortas, mira cuántos puntos sumas y descubre qué carreras estuvieron a tu alcance. Ninguna respuesta te quita puntos.</p>
     </div>
 
-    <!-- 2 -->
-    <div class="tarjeta">
-      <h2>2. Vulnerabilidad económica <span>No acumulable · hasta 40 puntos</span></h2>
-      <div class="regla">Criterio no acumulable. Para el puntaje por Sisbén solo se consideran encuestas realizadas en hogares de Bogotá-Región, validadas por el DNP con las marcas 0 (registro válido) y 10 (en verificación). Municipios de Bogotá-Región válidos: Soacha, Cajicá, Chía, Cota, Facatativá, Funza, La Calera, Madrid, Mosquera, Sesquilé, Sibaté, Sopó, Tenjo, Tocancipá, Ubaté y Zipaquirá.</div>
-      <div class="fila">
-        <div>
-          <label for="sisben">Grupo del Sisbén IV, o condición de la persona sin Sisbén</label>
-          <div class="alcance"><b>Cómo se verifica:</b> Departamento Nacional de Planeación (DNP), certificados de pertenencia étnica cargados en SICORE y base de datos SIMAT del Ministerio de Educación Nacional y de la Secretaría de Educación de Bogotá.</div>
-        </div>
-        <select id="sisben"></select>
-        <div class="pts" id="p_sisben">0</div>
-      </div>
-    </div>
+    <nav class="pasos" id="pasos" aria-label="Pasos de la calculadora"></nav>
 
-    <!-- 3 -->
-    <div class="tarjeta">
-      <h2>3. Mérito académico <span>Hasta 40 puntos</span></h2>
-      <div class="regla">Se asigna por <b>puesto</b> o por <b>percentil</b> de la prueba Saber 11, según el año de presentación: el criterio de puesto aplica para quienes presentaron la prueba antes de 2015. Solo se consideran exámenes en estado "PUBLICADO" según la validación del ICFES. Para personas con discapacidad que presentaron el cuadernillo con ajustes razonables, se usa el percentil reportado por el ICFES para esa versión de la prueba.</div>
-      <div class="fila">
-        <div>
-          <label for="anio">¿Cuándo presentó la prueba Saber 11?</label>
-          <div class="alcance"><b>Cómo se verifica:</b> Instituto Colombiano para la Evaluación de la Educación (ICFES).</div>
+    <div class="rejilla" id="rejilla">
+      <div>
+        <!-- Paso 1 -->
+        <div class="tarjeta paso" data-paso="0">
+          <div class="paso-cab">
+            <div class="ico"><svg class="i"><use href="#i-persona"/></svg></div>
+            <div><h2>¿Quién eres?</h2><p>Marca todo lo que aplique. Estas condiciones reconocen que llegar a la educación superior no es igual de fácil para todas las personas.</p></div>
+            <span class="tope">hasta 15 pts</span>
+          </div>
+          <div class="nota">Se suman, pero este criterio llega como máximo a 15 puntos.</div>
+          <div class="fichas" id="f_estructural"></div>
+          <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl id="v_estructural"></dl></details>
         </div>
-        <select id="anio">
-          <option value="pct">En 2015 o después</option>
-          <option value="puesto">Antes de 2015</option>
-        </select>
-        <div class="pts"></div>
-      </div>
-      <div class="fila">
-        <div>
-          <label for="saber" id="l_saber">Percentil obtenido (0 a 100)</label>
-          <div class="alcance" id="a_saber"></div>
+
+        <!-- Paso 2 -->
+        <div class="tarjeta paso" data-paso="1" hidden>
+          <div class="paso-cab">
+            <div class="ico"><svg class="i"><use href="#i-casa"/></svg></div>
+            <div><h2>Tu hogar</h2><p>Elige tu grupo del Sisbén IV o, si no tienes Sisbén, tu situación. Se toma una sola opción.</p></div>
+            <span class="tope">hasta 40 pts</span>
+          </div>
+          <div class="fichas" id="f_sisben" role="radiogroup" aria-label="Sisbén"></div>
+          <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl>
+            <dt>Fuentes</dt><dd>Departamento Nacional de Planeación (DNP), certificados de pertenencia étnica cargados en SICORE y SIMAT.</dd>
+            <dt>Qué encuestas cuentan</dt><dd>Solo encuestas de hogares de Bogotá Región, validadas por el DNP con marca 0 (registro válido) o 10 (en verificación).</dd>
+            <dt>Municipios válidos</dt><dd>Soacha, Cajicá, Chía, Cota, Facatativá, Funza, La Calera, Madrid, Mosquera, Sesquilé, Sibaté, Sopó, Tenjo, Tocancipá, Ubaté y Zipaquirá.</dd>
+          </dl></details>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="tarjeta paso" data-paso="2" hidden>
+          <div class="paso-cab">
+            <div class="ico"><svg class="i"><use href="#i-libro"/></svg></div>
+            <div><h2>Tu prueba Saber 11</h2><p>El mérito académico se mide con tu percentil o, si presentaste la prueba antes de 2015, con tu puesto.</p></div>
+            <span class="tope">hasta 40 pts</span>
+          </div>
+          <div class="segmento" role="group" aria-label="Año de la prueba">
+            <button type="button" data-modo="pct">En 2015 o después</button>
+            <button type="button" data-modo="puesto">Antes de 2015</button>
+          </div>
+          <div class="saber">
+            <div>
+              <label for="saber" id="l_saber">Tu percentil</label>
+              <input type="number" id="saber" min="0" step="1" inputmode="numeric" placeholder="—">
+            </div>
+            <div>
+              <div id="caja_rango"><label for="rango">O desliza</label><input type="range" id="rango" min="0" max="100" step="1" value="0"></div>
+              <div class="nota" id="a_saber" style="margin:6px 0 0"></div>
+            </div>
+          </div>
           <div class="error" id="e_saber"></div>
           <div id="t_saber"></div>
+          <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl>
+            <dt>Fuente</dt><dd>ICFES. Solo cuentan exámenes en estado «PUBLICADO».</dd>
+            <dt>Prueba con ajustes razonables</dt><dd>Si presentaste el cuadernillo con ajustes razonables para población con discapacidad, se usa el percentil que el ICFES reporta para esa versión de la prueba.</dd>
+          </dl></details>
         </div>
-        <input type="number" id="saber" min="0" step="1" inputmode="numeric" placeholder="Escriba el número">
-        <div class="pts" id="p_saber">0</div>
+
+        <!-- Paso 4 -->
+        <div class="tarjeta paso" data-paso="3" hidden>
+          <div class="paso-cab">
+            <div class="ico"><svg class="i"><use href="#i-sube"/></svg></div>
+            <div><h2>Tu camino hasta hoy</h2><p>¿Ya has participado en alguno de estos programas o procesos de la ciudad?</p></div>
+            <span class="tope">hasta 5 pts</span>
+          </div>
+          <div class="nota">Con una sola condición ya sumas los 5 puntos; tener varias no suma más.</div>
+          <div class="fichas" id="f_trayectorias"></div>
+          <details class="como"><summary>¿Cómo lo verifica Atenea?</summary><dl id="v_trayectorias"></dl></details>
+        </div>
+
+        <!-- Resultado -->
+        <div data-paso="4" hidden>
+          <div class="tarjeta resultado">
+            <div>
+              <div class="medidor grande"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="fondo" cx="60" cy="60" r="52" fill="none" stroke-width="11"/><circle class="valor arco" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg><div class="centro"><strong class="total">0</strong><span>de 100 puntos</span></div></div>
+            </div>
+            <div>
+              <h2 id="r_titulo">Tu puntaje estimado</h2>
+              <div class="desglose" id="r_desglose"></div>
+              <div class="mensaje" id="r_mensaje"></div>
+              <div class="acc-btn">
+                <button type="button" class="btn pri" data-ir="carreras"><svg class="i"><use href="#i-brujula"/></svg>Ver carreras a mi alcance</button>
+                <button type="button" class="btn" id="editar"><svg class="i"><use href="#i-recarga"/></svg>Revisar mis respuestas</button>
+              </div>
+            </div>
+          </div>
+          <h3 class="sub">Lo que puedes hacer desde ya</h3>
+          <div class="acciones" id="acciones"></div>
+        </div>
+
+        <div class="navega" id="navega">
+          <button type="button" class="btn fant" id="atras"><svg class="i"><use href="#i-flecha-i"/></svg>Atrás</button>
+          <button type="button" class="btn pri" id="siguiente">Siguiente<svg class="i"><use href="#i-flecha-d"/></svg></button>
+        </div>
       </div>
-    </div>
 
-    <!-- 4 -->
-    <div class="tarjeta">
-      <h2>4. Fomento a trayectorias <span>No acumulable · hasta 5 puntos</span></h2>
-      <div class="regla">Criterio no acumulable: se asignan hasta 5 puntos, aunque se cumpla más de una condición.</div>
-      <div id="trayectorias"></div>
-    </div>
-
-    <!-- Alcance -->
-    <div class="tarjeta">
-      <h2>Alcance del puntaje</h2>
-      <details>
-        <summary>Cómo se usa el puntaje para asignar cupos</summary>
-        <div>
-          <ol>
-            <li>Atenea verifica los requisitos de participación; quienes los cumplen quedan habilitados.</li>
-            <li>A cada habilitado se le calcula el puntaje de selección (0 a 100) con los cuatro criterios.</li>
-            <li>Los habilitados se ordenan de mayor a menor puntaje.</li>
-            <li>En ese orden, y siguiendo la preferencia de programas de cada aspirante, se asigna el cupo si el programa aún tiene cupos y si hay recursos de Atenea o del Fondo de Desarrollo Local de la localidad de residencia.</li>
-          </ol>
-          Por la financiación de los Fondos de Desarrollo Local, una persona con menor puntaje puede recibir cupo antes que otra si su localidad todavía tiene recursos. También es posible cumplir requisitos y tener puntaje sin resultar elegible, si los cupos de los programas elegidos ya se asignaron.
+      <aside class="lateral">
+        <div class="tarjeta medidor-caja">
+          <h3>Tu puntaje estimado</h3>
+          <div class="medidor"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="fondo" cx="60" cy="60" r="52" fill="none" stroke-width="11"/><circle class="valor arco" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg><div class="centro"><strong class="total">0</strong><span>de 100</span></div></div>
+          <div class="desglose" id="l_desglose"></div>
+          <div class="mensaje neutro" id="l_mensaje"></div>
         </div>
-      </details>
-      <details>
-        <summary>Verificación de la información</summary>
-        <div>Los criterios de puntuación, con excepción del de personas transgénero, se verifican con registros administrativos de entidades nacionales y distritales. Cuando no existen fuentes oficiales, el aspirante debe cargar en la plataforma de inscripción los certificados o documentos correspondientes. La información corresponde a la fecha de corte de cada entidad, y cada entidad responde por la calidad de sus datos.</div>
-      </details>
-      <details>
-        <summary>Criterios de desempate</summary>
-        <div>Si varias personas con el mismo puntaje superan los cupos de un programa, se aplica este orden:
-          <ol>
-            <li>Mejor puntaje global en Saber 11.</li>
-            <li>Subgrupo del Sisbén IV más vulnerable.</li>
-            <li>Mayor puntaje en vulnerabilidad estructural.</li>
-            <li>Ser egresado de colegio oficial.</li>
-            <li>Haber votado en las últimas elecciones populares organizadas por la Registraduría, que para esta convocatoria es la elección de presidente de la República del 21 de junio de 2026 (certificado electoral cargado en SICORE).</li>
-            <li>Asignación aleatoria: a cada aspirante empatado se le genera un número aleatorio único, con semilla igual a la fecha del día siguiente al cierre de inscripciones (AAAAMMDD), y se prioriza el menor valor.</li>
-          </ol>
-        </div>
-      </details>
-      <details>
-        <summary>Colegios rurales que otorgan puntaje (Tabla 6)</summary>
-        <div>
-          <ul>
-            <li>Colegio Gimnasio del Campo Juan de la Cruz Varela (IED): sedes U.B. Unión y Erasmo Valencia, Sumapaz.</li>
-            <li>Colegio Campestre Jaime Garzón (IED): sedes U.B. Las Auras y Adelina Gutiérrez Palacios, Sumapaz.</li>
-            <li>Colegio El Destino (IED), Usme.</li>
-            <li>Colegio El Verjón (IED): sede El Verjón Alto, Santafé.</li>
-            <li>Colegio Rural Pasquilla (IED), Ciudad Bolívar.</li>
-            <li>Colegio Rural Quiba Alta (IED), Ciudad Bolívar.</li>
-          </ul>
-        </div>
-      </details>
-      <details>
-        <summary>Qué no incluye esta calculadora</summary>
-        <div>
-          <ul>
-            <li>La verificación de los requisitos mínimos de participación (numeral 5.6.3 del lineamiento).</li>
-            <li>Los requisitos de admisión propios de algunas IES, como puntaje mínimo en Saber 11, entrevistas o pruebas.</li>
-            <li>La disponibilidad de cupos y de recursos por localidad, que define si un puntaje alcanza o no.</li>
-            <li>La línea de Talentos Excepcionales, que tiene reglas distintas.</li>
-          </ul>
-        </div>
-      </details>
+      </aside>
     </div>
   </section>
 
-  <aside>
-    <div class="res" aria-live="polite">
-      <h2>Puntaje estimado</h2>
-      <div class="total"><strong id="total">0</strong><span>/ 100</span></div>
-      <div id="barras"></div>
-      <div class="botones">
-        <button type="button" id="limpiar">Limpiar</button>
-        <button type="button" class="pri" onclick="window.print()">Imprimir</button>
+  <!-- ===================== CARRERAS ===================== -->
+  <section class="panel-tab" role="tabpanel" id="carreras" aria-labelledby="tab-carreras" hidden>
+    <div class="cab-tab">
+      <div>
+        <h1>¿Qué te mueve?</h1>
+        <p>Elige lo que te gusta hacer y compara tu puntaje con el de la <b>última persona que obtuvo cupo</b> en cada programa en Jóvenes a la E 4. Es una referencia: en esta convocatoria cambian los cupos y los inscritos.</p>
       </div>
-      <div class="nota">Cálculo con la información registrada aquí. El puntaje de selección lo asigna Atenea a los aspirantes habilitados, a partir de las fuentes oficiales de consulta.</div>
+      <div class="aviso-puntaje" id="aviso_puntaje"></div>
     </div>
-  </aside>
+
+    <div class="intereses" id="intereses" role="group" aria-label="Áreas de interés"></div>
+    <div class="desliza">Desliza para ver más áreas →</div>
+
+    <div class="filtros">
+      <div class="buscar"><label for="f_texto">Busca una carrera o institución</label><input type="search" id="f_texto" placeholder="Ej.: enfermería, software, Javeriana"></div>
+      <button type="button" class="btn btn-filtros" id="btn_filtros" aria-expanded="false">Filtros</button>
+      <div class="extra"><label for="f_nivel">Tipo de formación</label><select id="f_nivel"></select></div>
+      <div class="extra"><label for="f_mod">Modalidad</label><select id="f_mod"></select></div>
+      <div class="extra"><label for="f_jor">Jornada</label><select id="f_jor"></select></div>
+      <label class="interruptor extra"><input type="checkbox" id="f_alcance"> Solo a mi alcance</label>
+    </div>
+
+    <div class="resumen"><span id="resumen"></span>
+      <label class="orden">Ordenar <select id="f_orden">
+        <option value="cerca">Mejores para mi puntaje</option>
+        <option value="cupos">Más cupos</option>
+        <option value="az">Nombre (A a Z)</option>
+      </select></label>
+    </div>
+    <div class="programas" id="programas"></div>
+    <button type="button" class="btn mas" id="mas" hidden></button>
+  </section>
+
+  <!-- ===================== MIS OPCIONES ===================== -->
+  <section class="panel-tab" role="tabpanel" id="opciones" aria-labelledby="tab-opciones" hidden>
+    <div class="cab-tab">
+      <div>
+        <h1>Arma tus 3 opciones</h1>
+        <p>En la inscripción puedes elegir hasta tres programas en orden de preferencia. Practica aquí: marca <b>Elegir</b> en la pestaña Carreras y ordénalas.</p>
+      </div>
+    </div>
+    <div class="opciones">
+      <ol class="mias" id="mias"></ol>
+      <div class="tarjeta explica">
+        <h3>¿Cómo se usa el orden?</h3>
+        <ol>
+          <li>Atenea ordena a todos los aspirantes habilitados de mayor a menor puntaje.</li>
+          <li>Cuando llega tu turno, revisa tu opción 1. Si tiene cupo y hay recursos, quedas en esa.</li>
+          <li>Si no, pasa a tu opción 2 y luego a la 3.</li>
+        </ol>
+        <p>Pon primero lo que más quieres estudiar, y deja en la 2 y la 3 programas donde tu puntaje tenga más margen.</p>
+      </div>
+    </div>
+    <div class="llamado">
+      <div>
+        <h2>Tu lugar en la educación superior te está esperando</h2>
+        <p>Jóvenes a la E financia tu matrícula en instituciones de educación superior de Bogotá. Inscribirte no cuesta nada y puede cambiar tu historia.</p>
+      </div>
+      <a class="btn pri" id="inscribirse" href="#" target="_blank" rel="noopener">Quiero inscribirme<svg class="i"><use href="#i-flecha-d"/></svg></a>
+    </div>
+  </section>
+
+  <!-- ===================== DUDAS ===================== -->
+  <section class="panel-tab dudas" role="tabpanel" id="dudas" aria-labelledby="tab-dudas" hidden>
+    <div class="cab-tab"><div><h1>Antes de decidir, ten en cuenta</h1></div></div>
+    <details open>
+      <summary>¿Este puntaje es el definitivo?</summary>
+      <div>No. La calculadora aplica los criterios de la Tabla 5 del Lineamiento Operativo dirigido a aspirantes (L57_EP). El puntaje definitivo lo asigna la Agencia Atenea después de verificar tu información con fuentes oficiales. Un puntaje alto no garantiza cupo, y uno bajo no te descarta.</div>
+    </details>
+    <details>
+      <summary>¿Qué significa el puntaje mínimo de JE4?</summary>
+      <div>Es el puntaje de la última persona que resultó elegible en ese programa en la cuarta convocatoria de Jóvenes a la E. Sirve para orientarte, pero en la sexta convocatoria cambian los cupos, el número de inscritos y los recursos de cada localidad, así que el mínimo puede subir o bajar. Cuando un programa tuvo pocos inscritos, su mínimo puede ser muy bajo. Los cupos que ves son los de esta sexta convocatoria.</div>
+    </details>
+    <details>
+      <summary>¿Cómo se asignan los cupos?</summary>
+      <div>
+        <ol>
+          <li>Atenea verifica los requisitos de participación; quienes los cumplen quedan habilitados.</li>
+          <li>A cada habilitado se le calcula el puntaje de selección (0 a 100) con los cuatro criterios.</li>
+          <li>Los habilitados se ordenan de mayor a menor puntaje.</li>
+          <li>En ese orden, y siguiendo la preferencia de programas de cada aspirante, se asigna el cupo si el programa aún tiene cupos y si hay recursos de Atenea o del Fondo de Desarrollo Local de la localidad de residencia.</li>
+        </ol>
+        Por la financiación de los Fondos de Desarrollo Local, una persona con menor puntaje puede recibir cupo antes que otra si su localidad todavía tiene recursos. También es posible cumplir requisitos y tener puntaje sin resultar elegible, si los cupos de los programas elegidos ya se asignaron.
+      </div>
+    </details>
+    <details>
+      <summary>¿Cómo se verifica mi información?</summary>
+      <div>Los criterios de puntuación, con excepción del de personas transgénero, se verifican con registros administrativos de entidades nacionales y distritales. Cuando no existen fuentes oficiales, debes cargar en la plataforma de inscripción los certificados o documentos correspondientes. La información corresponde a la fecha de corte de cada entidad, y cada entidad responde por la calidad de sus datos.</div>
+    </details>
+    <details>
+      <summary>¿Qué pasa si empato con otra persona?</summary>
+      <div>Si varias personas con el mismo puntaje superan los cupos de un programa, se aplica este orden:
+        <ol>
+          <li>Mejor puntaje global en Saber 11.</li>
+          <li>Subgrupo del Sisbén IV más vulnerable.</li>
+          <li>Mayor puntaje en vulnerabilidad estructural.</li>
+          <li>Ser egresado de colegio oficial.</li>
+          <li>Haber votado en las últimas elecciones populares organizadas por la Registraduría, que para esta convocatoria es la elección de presidente de la República del 21 de junio de 2026 (certificado electoral cargado en SICORE).</li>
+          <li>Asignación aleatoria: a cada aspirante empatado se le genera un número aleatorio único, con semilla igual a la fecha del día siguiente al cierre de inscripciones (AAAAMMDD), y se prioriza el menor valor.</li>
+        </ol>
+      </div>
+    </details>
+    <details>
+      <summary>¿Qué colegios rurales dan puntaje? (Tabla 6)</summary>
+      <div>
+        <ul>
+          <li>Colegio Gimnasio del Campo Juan de la Cruz Varela (IED): sedes U.B. Unión y Erasmo Valencia, Sumapaz.</li>
+          <li>Colegio Campestre Jaime Garzón (IED): sedes U.B. Las Auras y Adelina Gutiérrez Palacios, Sumapaz.</li>
+          <li>Colegio El Destino (IED), Usme.</li>
+          <li>Colegio El Verjón (IED): sede El Verjón Alto, Santafé.</li>
+          <li>Colegio Rural Pasquilla (IED), Ciudad Bolívar.</li>
+          <li>Colegio Rural Quiba Alta (IED), Ciudad Bolívar.</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>¿Qué no incluye esta calculadora?</summary>
+      <div>
+        <ul>
+          <li>La verificación de los requisitos mínimos de participación (numeral 5.6.3 del lineamiento).</li>
+          <li>Los requisitos de admisión propios de algunas IES, como puntaje mínimo en Saber 11, entrevistas o pruebas.</li>
+          <li>La disponibilidad de cupos y de recursos por localidad, que define si un puntaje alcanza o no.</li>
+          <li>La línea de Talentos Excepcionales, que tiene reglas distintas.</li>
+        </ul>
+      </div>
+    </details>
+    <footer>
+      Fuente: Agencia Distrital para la Educación Superior, la Ciencia y la Tecnología, Atenea. L57_EP Lineamiento Operativo dirigido a aspirantes, Sexta Convocatoria de Jóvenes a la E, versión 2 (11/11/2026), numerales 5.6.6, 5.6.6.1 y 5.6.6.2. Oferta de programas y cupos de la sexta convocatoria; puntaje del último elegible de la cuarta convocatoria.
+    </footer>
+  </section>
 </main>
 
-<footer>
-  Fuente: Agencia Distrital para la Educación Superior, la Ciencia y la Tecnología – Atenea. L57_EP Lineamiento Operativo dirigido a aspirantes, Sexta Convocatoria de Jóvenes a la E, versión 2 (11/11/2026), numerales 5.6.6, 5.6.6.1 y 5.6.6.2.
-</footer>
-
+<script src="oferta.js"></script>
 <script>
-// ====== PARÁMETROS (Tabla 5 del lineamiento L57_EP V2) ======
+// ====== CONFIGURACIÓN ======
+// Enlace al micrositio de inscripción de la convocatoria. Reemplazar por el definitivo.
+const ENLACE_INSCRIPCION = "https://agenciaatenea.gov.co/";
+const MARGEN_CERCA = 10; // puntos bajo el mínimo que se consideran "muy cerca"
+
+// ====== PARÁMETROS (Tabla 5 del lineamiento L57_EP) ======
 const TOPE = {e:15, ec:40, m:40, t:5};
 
 const ESTRUCTURAL = [
-  {id:"mujer", pts:7, t:"Mujer",
-   a:"Registraduría Nacional del Estado Civil."},
-  {id:"hijos", pts:5, t:"Mujer con hijos", depende:"mujer",
-   a:"La aspirante con hijos debe cargar en el sistema de inscripciones de Atenea la copia del registro civil de nacimiento de sus hijas o hijos para obtener el puntaje adicional."},
-  {id:"trans", pts:10, t:"Personas transgénero",
-   a:"Corresponde al autorreconocimiento del aspirante, según el mandato constitucional."},
-  {id:"etnia", pts:15, t:"Personas con pertenencia étnica",
-   opciones:["No","Comunidades negras, afrocolombianas o palenqueras","Raizales","Pueblos indígenas","Pueblo Rrom"],
-   a:"Comunidades negras, afrocolombianas o palenqueras, pueblos indígenas y pueblo Rrom: el aspirante debe cargar en la hoja de vida del sistema de inscripciones el certificado oficial descargado de la página del Ministerio del Interior; el cargue y la validación del soporte son necesarios para el puntaje. Población raizal: se verifica con SIMAT y no se requiere el certificado si la pertenencia puede validarse por esa fuente."},
-  {id:"vict", pts:10, t:"Víctimas del conflicto",
-   a:"RUV – Unidad para la Atención y Reparación Integral a las Víctimas, o Alta Consejería de Paz, Víctimas y Reconciliación de Bogotá."},
-  {id:"vbg", pts:10, t:"Víctimas de violencia de género",
-   a:"Secretaría Distrital de la Mujer."},
-  {id:"reinc", pts:10, t:"Reincorporados y reinsertados",
-   a:"Agencia para la Reincorporación y Normalización (ARN)."},
-  {id:"disc", pts:10, t:"Personas con discapacidad",
-   a:"Ministerio de Salud y Protección Social y/o Secretaría Distrital de Salud."},
-  {id:"fp", pts:10, t:"Miembro de la fuerza pública con discapacidad acreditado con el carné de beneficios según Ley 1699 de 2013 (numerales 2 y 3 del artículo 2)",
-   a:"Ministerio de Defensa Nacional."},
-  {id:"rural", pts:15, t:"Egresados de colegios en la localidad de Sumapaz o de colegios oficiales ubicados en zonas rurales de otras localidades a más de 1,5 kilómetros del perímetro urbano",
-   a:"Sistema Integrado de Matrícula (SIMAT), Directorio Único de Establecimientos de la Secretaría de Educación Distrital y cartografía oficial de la Unidad Administrativa Especial de Catastro Distrital. Los colegios que aplican están en la Tabla 6 (ver “Alcance del puntaje”)."}
+  {id:"mujer", pts:7, t:"Mujer", a:"Registraduría Nacional del Estado Civil."},
+  {id:"hijos", pts:5, t:"Mujer con hijos", d:"Se suma a «Mujer».", depende:"mujer",
+   a:"Debes cargar en el sistema de inscripciones de Atenea la copia del registro civil de nacimiento de tus hijas o hijos para obtener el puntaje adicional."},
+  {id:"trans", pts:10, t:"Persona transgénero", a:"Corresponde a tu autorreconocimiento, según el mandato constitucional."},
+  {id:"etnia", pts:15, t:"Pertenencia étnica",
+   opciones:["Comunidades negras, afrocolombianas o palenqueras","Raizales","Pueblos indígenas","Pueblo Rrom"],
+   a:"Comunidades negras, afrocolombianas o palenqueras, pueblos indígenas y pueblo Rrom: debes cargar en la hoja de vida del sistema de inscripciones el certificado oficial descargado de la página del Ministerio del Interior; el cargue y la validación del soporte son necesarios para el puntaje. Población raizal: se verifica con SIMAT y no se requiere el certificado si la pertenencia puede validarse por esa fuente."},
+  {id:"vict", pts:10, t:"Víctima del conflicto", a:"RUV, Unidad para la Atención y Reparación Integral a las Víctimas, o Alta Consejería de Paz, Víctimas y Reconciliación de Bogotá."},
+  {id:"vbg", pts:10, t:"Víctima de violencia de género", a:"Secretaría Distrital de la Mujer."},
+  {id:"reinc", pts:10, t:"Persona reincorporada o reinsertada", a:"Agencia para la Reincorporación y Normalización (ARN)."},
+  {id:"disc", pts:10, t:"Persona con discapacidad", a:"Ministerio de Salud y Protección Social y/o Secretaría Distrital de Salud."},
+  {id:"fp", pts:10, t:"Fuerza pública con discapacidad", d:"Acreditada con el carné de beneficios de la Ley 1699 de 2013 (numerales 2 y 3 del artículo 2).", a:"Ministerio de Defensa Nacional."},
+  {id:"rural", pts:15, t:"Egresado de colegio rural", d:"De Sumapaz, o colegio oficial rural de otra localidad a más de 1,5 km del perímetro urbano (Tabla 6, en Dudas).",
+   a:"SIMAT, Directorio Único de Establecimientos de la Secretaría de Educación Distrital y cartografía oficial de Catastro Distrital."}
 ];
 
 const SISBEN = [
-  ["Seleccione…", 0],
-  ["SISBEN A", 40],
-  ["SISBEN B", 30],
-  ["SISBEN C", 20],
-  ["Persona sin SISBEN egresada de colegio oficial rural", 40],
-  ["Persona sin SISBEN egresada de colegio oficial urbano", 15],
-  ["Aspirante con pertenencia étnica indígena sin Sisbén", 30],
-  ["Ninguna de las anteriores", 0]
+  {t:"SISBEN A", d:"Pobreza extrema", pts:40},
+  {t:"SISBEN B", d:"Pobreza moderada", pts:30},
+  {t:"SISBEN C", d:"Vulnerable", pts:20},
+  {t:"Sin Sisbén, colegio oficial rural", d:"Egresado de colegio oficial rural", pts:40},
+  {t:"Sin Sisbén, colegio oficial urbano", d:"Egresado de colegio oficial urbano", pts:15},
+  {t:"Sin Sisbén, pertenencia indígena", d:"Aspirante con pertenencia étnica indígena", pts:30},
+  {t:"Ninguna de las anteriores", d:"Por ejemplo, Sisbén D o colegio privado", pts:0}
 ];
 
 // [desde, hasta, puntos]
@@ -273,103 +625,339 @@ const PERCENTIL = [[95,100,40],[90,94,35],[85,89,30],[80,84,25],[75,79,20],[70,7
 const PUESTO    = [[1,50,40],[51,100,35],[101,150,30],[151,200,25],[201,250,20],[251,350,15],[351,450,10],[451,499,5],[500,Infinity,0]];
 
 const TRAYECTORIAS = [
-  {id:"utc", t:"Beneficiarios graduados o con terminación de materias del programa La U en Tu Colegio (UTC), con corte al cierre de inscripciones de la convocatoria",
-   a:"Agencia Atenea."},
-  {id:"je", t:"Beneficiarios graduados del programa Jóvenes a la E (antes Jóvenes a la U) del nivel técnico profesional o tecnológico, o certificados del nivel técnico laboral, con corte al cierre de la convocatoria",
-   a:"Agencia Atenea (base maestra de beneficiarios)."},
-  {id:"cons", t:"Consejeros de juventud",
-   a:"Secretaría Distrital de Gobierno."},
-  {id:"idrd", t:"Deportista destacado IDRD",
-   a:"Listado del Instituto Distrital de Recreación y Deporte (IDRD)."},
-  {id:"jco", t:"Jóvenes participantes de la estrategia intersectorial para la inclusión social y productiva “Jóvenes con Oportunidades”",
-   a:"Secretaría Distrital de Integración Social."}
+  {id:"utc", t:"La U en Tu Colegio (UTC)", d:"Graduado o con terminación de materias, con corte al cierre de inscripciones.", a:"Agencia Atenea."},
+  {id:"je", t:"Graduado de Jóvenes a la E", d:"Antes Jóvenes a la U. Técnico profesional o tecnológico, o certificado en técnico laboral.", a:"Agencia Atenea (base maestra de beneficiarios)."},
+  {id:"cons", t:"Consejero de juventud", a:"Secretaría Distrital de Gobierno."},
+  {id:"idrd", t:"Deportista destacado IDRD", a:"Listado del Instituto Distrital de Recreación y Deporte (IDRD)."},
+  {id:"jco", t:"Jóvenes con Oportunidades", d:"Estrategia intersectorial para la inclusión social y productiva.", a:"Secretaría Distrital de Integración Social."}
 ];
 const P_TRAY = 5;
 
-// ====== CONSTRUCCIÓN DEL FORMULARIO ======
+// Orientación socio ocupacional por campo amplio CINE
+const CAMPOS = {
+  "Ingeniería, Industria y Construcción":{i:"c-ing", n:"Construir y mejorar", d:"Diseñar, construir y hacer que máquinas, procesos y ciudades funcionen."},
+  "Tecnologías de la Información y la Comunicación (TIC)":{i:"c-tic", n:"Crear con tecnología", d:"Programar, proteger sistemas y convertir datos en soluciones."},
+  "Administración de Empresas y Derecho":{i:"c-adm", n:"Liderar y emprender", d:"Organizar, negociar, defender derechos y sacar adelante proyectos."},
+  "Ciencias Sociales, Periodismo e Información":{i:"c-soc", n:"Entender la sociedad", d:"Investigar, comunicar y comprender cómo viven las personas."},
+  "Salud y Bienestar":{i:"c-sal", n:"Cuidar a otros", d:"Acompañar la salud y el bienestar de personas y familias."},
+  "Arte y Humanidades":{i:"c-art", n:"Crear y expresar", d:"Diseño, música, imagen y palabra para contar el mundo."},
+  "Ciencias Naturales, Matemáticas y Estadística":{i:"c-cie", n:"Descubrir cómo funciona todo", d:"Preguntar, experimentar y encontrar patrones."},
+  "Educación":{i:"c-edu", n:"Enseñar y transformar", d:"Acompañar a niñas, niños y jóvenes a aprender."},
+  "Servicios":{i:"c-ser", n:"Servir y recibir al mundo", d:"Turismo, deporte y servicios para las personas."},
+  "Agropecuario, Silvicultura, Pesca y Veterinaria":{i:"c-agr", n:"Cuidar la tierra", d:"Producir alimentos y cuidar animales y campo."}
+};
+
+// ====== UTILIDADES ======
 const $ = id => document.getElementById(id);
-function fila(item, prefijo){
-  const ops = item.opciones || ["No","Sí"];
-  return `<div class="fila">
-    <div><label for="${prefijo+item.id}">${item.t}</label>
-      <div class="alcance"><b>Cómo se verifica:</b> ${item.a}</div></div>
-    <select id="${prefijo+item.id}">${ops.map((o,i)=>`<option value="${i}">${o}</option>`).join("")}</select>
-    <div class="pts" id="p_${prefijo+item.id}">0</div>
-  </div>`;
-}
-$("estructural").innerHTML = ESTRUCTURAL.map(x=>fila(x,"e_")).join("");
-$("trayectorias").innerHTML = TRAYECTORIAS.map(x=>fila(x,"t_")).join("");
-$("sisben").innerHTML = SISBEN.map((s,i)=>`<option value="${i}">${s[0]}</option>`).join("");
+const $$ = sel => document.querySelectorAll(sel);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ico = (id, cls="i") => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const guardar = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+const leer = (k,d) => { try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? d; }catch(e){ return d; } };
+const OFERTA = Array.isArray(window.OFERTA) ? window.OFERTA : [];
+const POR_ID = new Map(OFERTA.map(o=>[o.id,o]));
 
-const CRITERIOS = [["e","Vulnerabilidad estructural"],["ec","Vulnerabilidad económica"],["m","Mérito académico"],["t","Fomento a trayectorias"]];
-$("barras").innerHTML = CRITERIOS.map(([k,n])=>`<div class="barra">
-  <div class="t"><span>${n}</span><b><span id="v_${k}">0</span> / ${TOPE[k]}</b></div>
-  <div class="riel"><i id="b_${k}" style="width:0"></i></div>
-  <div class="calc" id="c_${k}"></div></div>`).join("");
+// ====== ESTADO ======
+const VACIO = () => ({e:{}, etniaGrupo:0, sisben:-1, modo:"pct", saber:"", t:{}});
+let S = Object.assign(VACIO(), leer("je6_estado", {}));
+let paso = 0, PUNTAJE = 0, PARTES = {e:0,ec:0,m:0,t:0}, DETALLE = {}, HAY_DATOS = false;
+let filtroCampo = null, visibles = 24;
+let elegidos = leer("je6_opciones", []).filter(id=>POR_ID.has(id)).slice(0,3);
 
-function pinta(id, pts){ const el=$(id); el.textContent=pts; el.classList.toggle("on", pts>0); }
-
-// ====== CÁLCULO ======
+// ====== CÁLCULO (Tabla 5) ======
 function calcular(){
+  if(!S.e.mujer) S.e.hijos = false;
   // 1. Estructural: suma con tope
-  const esMujer = $("e_mujer").value !== "0";
-  const selH = $("e_hijos");
-  selH.disabled = !esMujer; if(!esMujer) selH.value = "0";
-  let partes = [];
-  ESTRUCTURAL.forEach(x=>{
-    const p = $("e_"+x.id).value !== "0" ? x.pts : 0;
-    pinta("p_e_"+x.id, p); if(p) partes.push(p);
-  });
+  const partes = ESTRUCTURAL.filter(x=>S.e[x.id]).map(x=>x.pts);
   const sumaE = partes.reduce((a,b)=>a+b,0);
   const e = Math.min(TOPE.e, sumaE);
-  $("c_e").textContent = partes.length===0 ? "Sin condiciones marcadas."
-    : partes.join(" + ") + " = " + sumaE + (sumaE>TOPE.e ? " → se aplica el tope de "+TOPE.e+"." : ".");
-
-  // 2. Económica: una sola variable
-  const s = SISBEN[+$("sisben").value];
-  const ec = Math.min(TOPE.ec, s[1]);
-  pinta("p_sisben", ec);
-  $("c_ec").textContent = +$("sisben").value===0 ? "Sin selección." : s[0] + " = " + ec + ".";
-
+  DETALLE.e = partes.length ? partes.join(" + ")+" = "+sumaE+(sumaE>TOPE.e?", tope "+TOPE.e:"") : "Sin condiciones marcadas";
+  // 2. Económica: una sola opción
+  const op = SISBEN[S.sisben];
+  const ec = op ? Math.min(TOPE.ec, op.pts) : 0;
+  DETALLE.ec = op ? op.t : "Sin selección";
   // 3. Mérito: percentil o puesto
-  const modo = $("anio").value, tabla = modo==="pct" ? PERCENTIL : PUESTO;
-  $("l_saber").textContent = modo==="pct" ? "Percentil obtenido (0 a 100)" : "Puesto obtenido (1 en adelante)";
-  $("a_saber").innerHTML = modo==="pct"
-    ? "Percentil de la prueba Saber 11 reportado por el ICFES."
-    : "Puesto en la prueba Saber 11 reportado por el ICFES. Aplica para pruebas presentadas antes de 2015.";
-  const crudo = $("saber").value.trim(); let m = 0, idx = -1, err = "", txt = "Sin dato.";
-  if(crudo!==""){
-    const v = Math.floor(Number(crudo));
-    if(isNaN(v) || (modo==="pct" && (v<0||v>100))) err = "El percentil debe estar entre 0 y 100.";
-    else if(modo==="puesto" && v<1) err = "El puesto debe ser 1 o mayor.";
-    else{
-      idx = tabla.findIndex(r=>v>=r[0] && v<=r[1]); m = tabla[idx][2];
-      const r = tabla[idx], rango = r[1]===Infinity ? "mayor a 499" : (modo==="pct"&&r[0]===0 ? "menor a 50" : r[0]+" a "+r[1]);
-      txt = (modo==="pct" ? "Percentil " : "Puesto ") + v + " → rango " + rango + " = " + m + ".";
-    }
+  const tabla = S.modo==="pct" ? PERCENTIL : PUESTO;
+  let m = 0; DETALLE.idx = -1; DETALLE.err = "";
+  if(String(S.saber).trim()!==""){
+    const v = Math.floor(Number(S.saber));
+    if(isNaN(v) || (S.modo==="pct" && (v<0||v>100))) DETALLE.err = "El percentil debe estar entre 0 y 100.";
+    else if(S.modo==="puesto" && v<1) DETALLE.err = "El puesto debe ser 1 o mayor.";
+    else { DETALLE.idx = tabla.findIndex(r=>v>=r[0] && v<=r[1]); m = tabla[DETALLE.idx][2]; }
   }
-  $("e_saber").textContent = err; if(err) txt = "Dato no válido.";
-  $("t_saber").innerHTML = `<table><tr><th>${modo==="pct"?"Percentil":"Puesto"}</th>${tabla.map((r,i)=>`<th>${r[1]===Infinity?"> 499":(modo==="pct"&&r[0]===0?"< 50":r[0]+"–"+r[1])}</th>`).join("")}</tr>
-    <tr class="x"><td><b>Puntos</b></td>${tabla.map((r,i)=>`<td${i===idx?' style="background:#e3f3ea;font-weight:700"':''}>${r[2]}</td>`).join("")}</tr></table>`;
-  m = Math.min(TOPE.m, m); pinta("p_saber", m); $("c_m").textContent = txt;
-
+  m = Math.min(TOPE.m, m);
+  DETALLE.m = DETALLE.idx<0 ? "Sin dato" : (S.modo==="pct"?"Percentil ":"Puesto ")+Math.floor(Number(S.saber));
   // 4. Trayectorias: no acumulable
-  let n = 0;
-  TRAYECTORIAS.forEach(x=>{ const on = $("t_"+x.id).value!=="0"; pinta("p_t_"+x.id, on?P_TRAY:0); if(on) n++; });
+  const n = TRAYECTORIAS.filter(x=>S.t[x.id]).length;
   const t = n>0 ? Math.min(TOPE.t, P_TRAY) : 0;
-  $("c_t").textContent = n===0 ? "Sin condiciones marcadas." : n===1 ? "1 condición = "+t+"." : n+" condiciones, no se acumulan = "+t+".";
+  DETALLE.t = n===0 ? "Sin condiciones marcadas" : n===1 ? "1 condición" : n+" condiciones, no se acumulan";
 
-  // Total
-  const val = {e, ec, m, t};
-  CRITERIOS.forEach(([k])=>{ $("v_"+k).textContent = val[k]; $("b_"+k).style.width = (100*val[k]/TOPE[k])+"%"; });
-  $("total").textContent = e+ec+m+t;
+  PARTES = {e, ec, m, t};
+  PUNTAJE = e+ec+m+t;
+  HAY_DATOS = partes.length>0 || S.sisben>=0 || DETALLE.idx>=0 || n>0;
+  guardar("je6_estado", S);
 }
 
-document.querySelectorAll("select,input").forEach(el=>{ el.addEventListener("change",calcular); el.addEventListener("input",calcular); });
-$("limpiar").addEventListener("click",()=>{
-  document.querySelectorAll("#form select").forEach(s=>s.selectedIndex=0); $("saber").value=""; calcular();
+// ====== FICHAS DEL ASISTENTE ======
+function pintarFichas(){
+  $("f_estructural").innerHTML = ESTRUCTURAL.map(x=>{
+    const on = !!S.e[x.id], bloqueada = x.depende && !S.e[x.depende];
+    const sel = x.opciones && on ? `<select data-grupo aria-label="Grupo étnico">${x.opciones.map((o,i)=>`<option value="${i}" ${S.etniaGrupo===i?"selected":""}>${o}</option>`).join("")}</select>` : "";
+    return `<div class="ficha" role="checkbox" tabindex="0" data-e="${x.id}" aria-checked="${on}" aria-disabled="${!!bloqueada}">
+      <span class="t">${x.t}</span><span class="p">+${x.pts}</span>${x.d?`<span class="d">${x.d}</span>`:""}${sel}</div>`;
+  }).join("");
+  $("f_sisben").innerHTML = SISBEN.map((x,i)=>`<div class="ficha radio" role="radio" tabindex="0" data-s="${i}" aria-checked="${S.sisben===i}">
+      <span class="t">${x.t}</span><span class="p">${x.pts?"+"+x.pts:"0"}</span><span class="d">${x.d}</span></div>`).join("");
+  $("f_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<div class="ficha" role="checkbox" tabindex="0" data-t="${x.id}" aria-checked="${!!S.t[x.id]}">
+      <span class="t">${x.t}</span><span class="p">+${P_TRAY}</span>${x.d?`<span class="d">${x.d}</span>`:""}</div>`).join("");
+  // Saber 11
+  $$(".segmento button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.modo===S.modo));
+  const pct = S.modo==="pct";
+  $("l_saber").textContent = pct ? "Tu percentil" : "Tu puesto";
+  $("saber").placeholder = pct ? "0 a 100" : "1 o más";
+  $("caja_rango").hidden = !pct;
+  $("a_saber").textContent = pct ? "Encuentras tu percentil en el reporte de resultados del ICFES." : "Aplica si presentaste la prueba antes de 2015. Usa el puesto que reporta el ICFES.";
+  if(document.activeElement!==$("saber")) $("saber").value = S.saber;
+  if(pct) $("rango").value = Math.max(0, Math.min(100, Number(S.saber)||0));
+}
+
+function pintarSaber(){
+  const tabla = S.modo==="pct" ? PERCENTIL : PUESTO;
+  $("e_saber").textContent = DETALLE.err;
+  $("t_saber").innerHTML = `<table class="rangos"><tr><th>${S.modo==="pct"?"Percentil":"Puesto"}</th>${tabla.map(r=>`<th>${r[1]===Infinity?"> 499":(S.modo==="pct"&&r[0]===0?"< 50":r[0]+"–"+r[1])}</th>`).join("")}</tr>
+    <tr><th>Puntos</th>${tabla.map((r,i)=>`<td class="${i===DETALLE.idx?"activa":""}">${r[2]}</td>`).join("")}</tr></table>`;
+}
+
+const NOMBRES_PASO = ["Quién eres","Tu hogar","Saber 11","Tu camino","Resultado"];
+function pintarPasos(){
+  const pts = [PARTES.e, PARTES.ec, PARTES.m, PARTES.t];
+  $("pasos").innerHTML = NOMBRES_PASO.map((n,i)=>`<button type="button" class="pasito ${i<paso?"hecho":""}" data-ir-paso="${i}" ${i===paso?'aria-current="step"':""}>
+      <span class="n">${i<paso?ico("i-check","i"):i+1}</span><span class="lbl">${n}${i<4?`<small>${pts[i]} / ${[15,40,40,5][i]} pts</small>`:`<small>${PUNTAJE} pts</small>`}</span></button>`).join("");
+  $$("[data-paso]").forEach(el=>el.hidden = +el.dataset.paso!==paso);
+  $("atras").style.visibility = paso===0 ? "hidden" : "visible";
+  $("navega").hidden = paso===4;
+  $("portada").hidden = paso!==0;
+  $("rejilla").classList.toggle("final", paso===4);
+  $("siguiente").innerHTML = paso===3 ? `Ver mi resultado${ico("i-flecha-d")}` : `Siguiente${ico("i-flecha-d")}`;
+}
+
+// ====== MEDIDORES Y MENSAJES ======
+function desglose(){
+  return [["e","Quién eres"],["ec","Tu hogar"],["m","Saber 11"],["t","Tu camino"]].map(([k,n])=>`<div class="linea-c">
+    <div class="t"><span>${n}</span><b>${PARTES[k]} / ${TOPE[k]}</b></div>
+    <div class="riel"><i style="width:${100*PARTES[k]/TOPE[k]}%"></i></div></div>`).join("");
+}
+function mensaje(){
+  const si = OFERTA.filter(o=>PUNTAJE>=o.min).length;
+  const cerca = OFERTA.filter(o=>PUNTAJE<o.min && o.min-PUNTAJE<=MARGEN_CERCA).length;
+  if(!HAY_DATOS) return ["neutro", `<b class="g">${OFERTA.length} programas</b>te esperan en esta convocatoria. Responde y te mostramos cuáles están a tu alcance.`];
+  if(si>0) return ["", `<b class="g">${si} carreras</b>tuvieron en JE4 un último elegible con ${PUNTAJE} puntos o menos.${cerca?` Y ${cerca} más quedaron a menos de ${MARGEN_CERCA} puntos.`:""}`];
+  return ["neutro", `<b class="g">No te rindas</b>${cerca?`${cerca} carreras quedaron a menos de ${MARGEN_CERCA} puntos de ti. `:""}Mira «Lo que puedes hacer desde ya»: un dato al día o un soporte cargado puede sumar muchos puntos.`];
+}
+function pintarMedidores(){
+  $$(".total").forEach(el=>el.textContent = PUNTAJE);
+  $$(".arco").forEach(el=>el.style.strokeDashoffset = 326.73*(1-PUNTAJE/100));
+  $("pild").textContent = PUNTAJE;
+  $("l_desglose").innerHTML = desglose();
+  $("r_desglose").innerHTML = desglose();
+  const [cl, html] = mensaje();
+  $("l_mensaje").className = "mensaje "+cl; $("l_mensaje").innerHTML = html;
+  $("r_mensaje").className = "mensaje "+cl; $("r_mensaje").innerHTML = html;
+  $("r_titulo").textContent = PUNTAJE>=60 ? "¡Tienes un gran puntaje!" : PUNTAJE>=30 ? "¡Vas por buen camino!" : "Cada punto cuenta";
+}
+
+function pintarAcciones(){
+  const a = [];
+  if(S.sisben<0 || S.sisben===6) a.push(["i-casa","Revisa tu Sisbén","Si tu hogar vive en Bogotá Región y no tienes encuesta, o no conoces tu grupo, consúltalo en sisben.gov.co o solicita la encuesta con tiempo. El grupo A puede sumar 40 puntos."]);
+  if(S.e.etnia && S.etniaGrupo!==1) a.push(["i-doc","Carga tu certificado étnico","Descárgalo en la página del Ministerio del Interior y súbelo a tu hoja de vida en el sistema de inscripciones. Sin ese soporte no se asignan los puntos."]);
+  if(S.sisben===5) a.push(["i-doc","Soporte de pertenencia indígena","Para los 30 puntos de aspirante indígena sin Sisbén se valida el certificado de pertenencia étnica cargado en SICORE."]);
+  if(S.e.hijos) a.push(["i-doc","Registro civil de tus hijos","Sube la copia del registro civil de nacimiento de tus hijas o hijos para sumar los 5 puntos adicionales."]);
+  if(S.e.trans) a.push(["i-persona","Tu autorreconocimiento cuenta","Para el criterio de personas transgénero no necesitas soporte: se toma tu autorreconocimiento al inscribirte."]);
+  if(DETALLE.idx<0) a.push(["i-libro","Ten a mano tu Saber 11","Busca tu percentil en el reporte del ICFES. El mérito académico puede darte hasta 40 puntos."]);
+  a.push(["i-estrella","Elige bien tus 3 opciones","Pon primero lo que más quieres estudiar y combina con programas donde tu puntaje tenga margen."]);
+  a.push(["i-reloj","Inscríbete a tiempo","Revisa el cronograma en la página de Atenea y no dejes la inscripción para el último día."]);
+  $("acciones").innerHTML = a.map(([i,t,d])=>`<div class="accion"><span class="ico">${ico(i)}</span><div><h4>${t}</h4><p>${d}</p></div></div>`).join("");
+}
+
+// ====== CARRERAS ======
+function llenarSelect(id, valores, todos){
+  $(id).innerHTML = `<option value="">${todos}</option>` + valores.map(v=>`<option>${esc(v)}</option>`).join("");
+}
+const unicos = k => [...new Set(OFERTA.map(o=>o[k]))].sort((a,b)=>a.localeCompare(b,"es"));
+llenarSelect("f_nivel", unicos("nivel"), "Todos");
+llenarSelect("f_mod", unicos("mod"), "Todas");
+llenarSelect("f_jor", unicos("jor"), "Todas");
+
+function estado(min){
+  if(!HAY_DATOS) return "sin";
+  const d = PUNTAJE - min;
+  return d>=0 ? "si" : d>=-MARGEN_CERCA ? "cerca" : "reto";
+}
+const TXT_ESTADO = {si:["i-check","A tu alcance"], cerca:["i-sube","Muy cerca"], reto:["i-meta","Meta exigente"], sin:["i-calc","Calcula tu puntaje"]};
+
+function pintarIntereses(){
+  $("intereses").innerHTML = Object.keys(CAMPOS).filter(c=>OFERTA.some(o=>o.campo===c)).map(c=>{
+    const k = CAMPOS[c], total = OFERTA.filter(o=>o.campo===c).length;
+    const si = OFERTA.filter(o=>o.campo===c && PUNTAJE>=o.min).length;
+    return `<button type="button" class="interes" data-campo="${esc(c)}" aria-pressed="${filtroCampo===c}">
+      <span class="ico">${ico(k.i)}</span><b>${k.n}</b><small>${k.d}</small>
+      <span class="cuenta">${HAY_DATOS ? `${si} de ${total} a tu alcance` : `${total} programas`}</span></button>`;
+  }).join("");
+  $("aviso_puntaje").innerHTML = HAY_DATOS
+    ? `Tu puntaje <b class="n">${PUNTAJE}</b> <button type="button" class="btn fant" data-ir="puntaje" style="padding:4px 8px">Ajustar</button>`
+    : `Aún no calculas tu puntaje. <button type="button" class="btn pri" data-ir="puntaje" style="padding:6px 12px">Calcular</button>`;
+}
+
+function filtrados(){
+  const txt = sinTildes($("f_texto").value.trim());
+  const nivel = $("f_nivel").value, mod = $("f_mod").value, jor = $("f_jor").value;
+  const soloAlcance = $("f_alcance").checked && HAY_DATOS;
+  const l = OFERTA.filter(o =>
+    (!filtroCampo || o.campo===filtroCampo) && (!nivel || o.nivel===nivel) && (!mod || o.mod===mod) && (!jor || o.jor===jor) &&
+    (!txt || sinTildes(o.p+" "+o.i).includes(txt)) && (!soloAlcance || PUNTAJE>=o.min));
+  const orden = $("f_orden").value;
+  if(orden==="cupos") l.sort((a,b)=>b.cupos-a.cupos || a.p.localeCompare(b.p,"es"));
+  else if(orden==="az") l.sort((a,b)=>a.p.localeCompare(b.p,"es") || a.i.localeCompare(b.i,"es"));
+  else l.sort((a,b)=>{
+    // Primero lo alcanzable más exigente, luego lo que está más cerca por encima de tu puntaje.
+    const da = PUNTAJE-a.min, db = PUNTAJE-b.min;
+    if((da>=0)!==(db>=0)) return da>=0 ? -1 : 1;
+    return Math.abs(da)-Math.abs(db) || b.cupos-a.cupos;
+  });
+  return l;
+}
+
+function tarjeta(o){
+  const st = estado(o.min), [ic, et] = TXT_ESTADO[st], dif = PUNTAJE-o.min;
+  const det = st==="si" ? (dif===0 ? "igual al mínimo de JE4" : `${dif} pts sobre el mínimo de JE4`)
+            : st==="cerca" ? `te faltan ${-dif} pts` : st==="reto" ? `mínimo JE4: ${o.min}` : "";
+  const sel = elegidos.includes(o.id), lleno = elegidos.length>=3 && !sel;
+  return `<article class="programa">
+    <h3>${esc(o.p)}</h3>
+    <div class="ies">${esc(o.i)}</div>
+    <div class="chips"><span class="chip">${esc(o.nivel)}</span><span class="chip">${esc(o.mod)}</span><span class="chip">${esc(o.jor)}</span></div>
+    <span class="estado ${st}">${ico(ic)} ${et}${det?` <span class="x">· ${det}</span>`:""}</span>
+    <div class="regla-min" role="img" aria-label="Mínimo JE4 ${o.min} de 100${HAY_DATOS?`, tu puntaje ${PUNTAJE}`:""}">
+      ${HAY_DATOS?`<span class="rel" style="width:${PUNTAJE}%"></span>`:""}
+      <span class="m" style="left:${o.min}%"></span>
+      ${HAY_DATOS?`<span class="yo" style="left:${PUNTAJE}%"></span>`:""}
+    </div>
+    <div class="leyenda-min"><span>Último elegible JE4: <b>${o.min}</b></span>${HAY_DATOS?`<span>Tú: <b>${PUNTAJE}</b></span>`:""}</div>
+    <div class="pie">
+      <span class="cupos"><b>${o.cupos}</b> ${o.cupos===1?"cupo":"cupos"} en JE6</span>
+      <button type="button" class="elegir" data-id="${o.id}" aria-pressed="${sel}" ${lleno?'disabled title="Ya elegiste 3 programas"':""}>${ico("i-estrella")}${sel?"Elegida":"Elegir"}</button>
+    </div>
+  </article>`;
+}
+
+function pintarCarreras(){
+  pintarIntereses();
+  const l = filtrados(), si = l.filter(o=>PUNTAJE>=o.min).length;
+  $("resumen").innerHTML = l.length===0 ? "" : HAY_DATOS ? `<b>${l.length}</b> programas · <b>${si}</b> a tu alcance` : `<b>${l.length}</b> programas`;
+  $("programas").innerHTML = l.length===0
+    ? `<div class="vacio">No hay programas con esos filtros. Prueba quitando alguno${$("f_alcance").checked?" o desmarca «Solo a mi alcance»":""}.</div>`
+    : l.slice(0,visibles).map(tarjeta).join("");
+  $("mas").hidden = l.length<=visibles;
+  $("mas").textContent = `Ver más programas (${l.length-visibles})`;
+}
+
+// ====== MIS OPCIONES ======
+function pintarOpciones(){
+  guardar("je6_opciones", elegidos);
+  $("n_opc").hidden = elegidos.length===0; $("n_opc").textContent = elegidos.length;
+  $("mias").innerHTML = [0,1,2].map(i=>{
+    const o = POR_ID.get(elegidos[i]);
+    if(!o) return `<li class="libre"><span class="orden-n">${i+1}</span><span class="txt">Opción ${i+1} libre. <a href="#carreras" data-ir="carreras">Elige una carrera</a>.</span></li>`;
+    const st = estado(o.min), [, et] = TXT_ESTADO[st];
+    return `<li><span class="orden-n">${i+1}</span>
+      <span class="txt"><b>${esc(o.p)}</b><span>${esc(o.i)} · mínimo JE4 ${o.min}${HAY_DATOS?` · ${et}`:""}</span></span>
+      <button type="button" class="mini" data-mover="${i}" data-dir="-1" ${i===0?"disabled":""} aria-label="Subir">${ico("i-arriba")}</button>
+      <button type="button" class="mini" data-mover="${i}" data-dir="1" ${i===elegidos.length-1?"disabled":""} aria-label="Bajar">${ico("i-abajo")}</button>
+      <button type="button" class="mini" data-quitar="${o.id}" aria-label="Quitar">${ico("i-x")}</button></li>`;
+  }).join("");
+}
+
+// ====== PESTAÑAS ======
+const TABS = ["puntaje","carreras","opciones","dudas"];
+function irA(tab, empujar=true){
+  if(!TABS.includes(tab)) tab = "puntaje";
+  $$(".pestana").forEach(b=>{ const on = b.dataset.tab===tab; b.setAttribute("aria-selected", on); b.tabIndex = on?0:-1; });
+  TABS.forEach(t=>$(t).hidden = t!==tab);
+  if(empujar && location.hash!=="#"+tab) history.pushState(null, "", "#"+tab);
+  window.scrollTo({top:0});
+}
+$$(".pestana").forEach(b=>b.addEventListener("click", ()=>irA(b.dataset.tab)));
+document.querySelector(".pestanas").addEventListener("keydown", ev=>{
+  const i = TABS.indexOf(document.activeElement.dataset.tab); if(i<0) return;
+  let j = ev.key==="ArrowRight" ? i+1 : ev.key==="ArrowLeft" ? i-1 : ev.key==="Home" ? 0 : ev.key==="End" ? TABS.length-1 : null;
+  if(j===null) return; ev.preventDefault(); j = (j+TABS.length)%TABS.length;
+  irA(TABS[j]); $("tab-"+TABS[j]).focus();
 });
-calcular();
+window.addEventListener("popstate", ()=>irA(location.hash.slice(1), false));
+document.addEventListener("click", ev=>{
+  const b = ev.target.closest("[data-ir]"); if(!b) return;
+  ev.preventDefault();
+  if(b.dataset.ir==="carreras" && b.closest("[data-paso='4']") && HAY_DATOS){ $("f_alcance").checked = true; visibles=24; pintarCarreras(); }
+  irA(b.dataset.ir);
+});
+
+// ====== EVENTOS DEL ASISTENTE ======
+function todo(){ calcular(); pintarFichas(); pintarSaber(); pintarPasos(); pintarMedidores(); pintarAcciones(); pintarCarreras(); pintarOpciones(); }
+function alternar(el){
+  if(el.getAttribute("aria-disabled")==="true") return;
+  if(el.dataset.e){ S.e[el.dataset.e] = !S.e[el.dataset.e]; }
+  else if(el.dataset.s){ const i=+el.dataset.s; S.sisben = S.sisben===i ? -1 : i; }
+  else if(el.dataset.t){ S.t[el.dataset.t] = !S.t[el.dataset.t]; }
+  const clave = el.dataset.e ? "e:"+el.dataset.e : el.dataset.s ? "s:"+el.dataset.s : "t:"+el.dataset.t;
+  todo();
+  const nuevo = document.querySelector(`[data-${clave.split(":")[0]}="${clave.split(":")[1]}"]`); if(nuevo) nuevo.focus();
+}
+document.querySelector("[data-paso='0']").parentElement.addEventListener("click", ev=>{
+  if(ev.target.closest("select")) return;
+  const f = ev.target.closest(".ficha"); if(f) alternar(f);
+});
+document.querySelector("[data-paso='0']").parentElement.addEventListener("keydown", ev=>{
+  const f = ev.target.closest(".ficha"); if(!f || ev.target.tagName==="SELECT") return;
+  if(ev.key===" " || ev.key==="Enter"){ ev.preventDefault(); alternar(f); }
+});
+$("f_estructural").addEventListener("change", ev=>{ if(ev.target.matches("[data-grupo]")){ S.etniaGrupo = +ev.target.value; todo(); } });
+$$(".segmento button").forEach(b=>b.addEventListener("click", ()=>{ if(S.modo!==b.dataset.modo){ S.modo = b.dataset.modo; S.saber = ""; todo(); } }));
+$("saber").addEventListener("input", ()=>{ S.saber = $("saber").value; todo(); });
+$("rango").addEventListener("input", ()=>{ S.saber = $("rango").value; $("saber").value = S.saber; todo(); });
+$("siguiente").addEventListener("click", ()=>{ paso = Math.min(4, paso+1); pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
+$("atras").addEventListener("click", ()=>{ paso = Math.max(0, paso-1); pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
+$("pasos").addEventListener("click", ev=>{ const b = ev.target.closest("[data-ir-paso]"); if(b){ paso = +b.dataset.irPaso; pintarPasos(); } });
+$("editar").addEventListener("click", ()=>{ paso = 0; pintarPasos(); window.scrollTo({top:0, behavior:"smooth"}); });
+
+// ====== EVENTOS DE CARRERAS Y OPCIONES ======
+["f_texto","f_nivel","f_mod","f_jor","f_alcance","f_orden"].forEach(id=>$(id).addEventListener("input", ()=>{ visibles=24; pintarCarreras(); }));
+$("intereses").addEventListener("click", ev=>{
+  const b = ev.target.closest(".interes"); if(!b) return;
+  filtroCampo = filtroCampo===b.dataset.campo ? null : b.dataset.campo; visibles=24; pintarCarreras();
+});
+$("programas").addEventListener("click", ev=>{
+  const b = ev.target.closest(".elegir"); if(!b) return;
+  const id = +b.dataset.id;
+  elegidos = elegidos.includes(id) ? elegidos.filter(x=>x!==id) : elegidos.concat(id).slice(0,3);
+  pintarCarreras(); pintarOpciones();
+});
+$("mias").addEventListener("click", ev=>{
+  const q = ev.target.closest("[data-quitar]"), mv = ev.target.closest("[data-mover]");
+  if(q) elegidos = elegidos.filter(x=>x!==+q.dataset.quitar);
+  else if(mv){ const i=+mv.dataset.mover, j=i+(+mv.dataset.dir); [elegidos[i],elegidos[j]]=[elegidos[j],elegidos[i]]; }
+  else return;
+  pintarCarreras(); pintarOpciones();
+});
+$("mas").addEventListener("click", ()=>{ visibles += 24; pintarCarreras(); });
+$("btn_filtros").addEventListener("click", ()=>{
+  const f = $("btn_filtros").closest(".filtros"), abierto = f.classList.toggle("abierto");
+  $("btn_filtros").setAttribute("aria-expanded", abierto);
+});
+$("inscribirse").href = ENLACE_INSCRIPCION;
+
+todo();
+irA(location.hash.slice(1) || "puntaje", false);
 </script>
 </body>
 </html>
