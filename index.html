@@ -667,7 +667,12 @@ let paso = 0, PUNTAJE = 0, PARTES = {e:0,ec:0,m:0,t:0}, DETALLE = {}, HAY_DATOS 
 let filtroCampo = null, visibles = 24;
 
 // ====== CÁLCULO (Tabla 5) ======
+function permiteSaber2026(){
+  return S.modo==="pct" && [99,100].includes(Number(S.saber));
+}
 function calcular(){
+  // Una selección anterior incompatible no se conserva ni modifica el dato Saber 11.
+  if(!permiteSaber2026()) S.t.saber2026=false;
   if(!S.e.mujer) S.e.hijos = false;
   // 1. Estructural: suma con tope
   const partes = ESTRUCTURAL.filter(x=>S.e[x.id]).map(x=>x.pts);
@@ -710,8 +715,12 @@ function pintarFichas(){
   }).join("");
   $("f_sisben").innerHTML = SISBEN.map((x,i)=>`<div class="ficha radio" role="radio" tabindex="0" data-s="${i}" aria-checked="${S.sisben===i}">
       <span class="t">${x.t}</span><span class="p">${x.pts?"+"+x.pts:"0"}</span><span class="d">${x.d}</span></div>`).join("");
-  $("f_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<div class="ficha ${x.requisitos?"ficha-amplia":""}" role="checkbox" tabindex="0" data-t="${x.id}" aria-checked="${!!S.t[x.id]}">
-    <span class="t">${x.t}</span><span class="p">+${P_TRAY}</span>${x.d?`<span class="d">${x.d}</span>`:""}${x.requisitos?`<ul class="requisitos-trayectoria">${x.requisitos.map(r=>`<li>${r}</li>`).join("")}</ul>`:""}</div>`).join("");
+  $("f_trayectorias").innerHTML = TRAYECTORIAS.map(x=>{
+    const bloqueada=x.id==="saber2026" && !permiteSaber2026();
+    const regla=x.id==="saber2026" ? (bloqueada ? "No disponible: en Saber 11 debes registrar un percentil de 99 o 100, en la opción En 2015 o después. Esta condición no cambia tu percentil ni suma puntos mientras no sea compatible." : "Tu percentil permite marcar esta opción. Confirma además que cumples todas las condiciones; no se selecciona automáticamente.") : "";
+    return `<div class="ficha ${x.requisitos?"ficha-amplia":""}" role="checkbox" tabindex="0" data-t="${x.id}" aria-checked="${!!S.t[x.id]}" aria-disabled="${bloqueada}" ${regla?'aria-describedby="regla-saber2026"':""}>
+    <span class="t">${x.t}</span><span class="p">${bloqueada?"0":"+"+P_TRAY}</span>${x.d?`<span class="d">${x.d}</span>`:""}${x.requisitos?`<ul class="requisitos-trayectoria">${x.requisitos.map(r=>`<li>${r}</li>`).join("")}</ul>`:""}${regla?`<span id="regla-saber2026" class="d"><b>${regla}</b></span>`:""}</div>`;
+  }).join("");
   $("v_estructural").innerHTML = ESTRUCTURAL.map(x=>`<dt>${x.t}</dt><dd>${x.a}</dd>`).join("");
   $("v_trayectorias").innerHTML = TRAYECTORIAS.map(x=>`<dt>${x.t}</dt><dd>${x.a}</dd>`).join("");
   // Saber 11
@@ -943,7 +952,7 @@ function alternar(el){
   if(el.getAttribute("aria-disabled")==="true") return;
   if(el.dataset.e){ S.e[el.dataset.e] = !S.e[el.dataset.e]; }
   else if(el.dataset.s){ const i=+el.dataset.s; S.sisben = S.sisben===i ? -1 : i; }
-  else if(el.dataset.t){ S.t[el.dataset.t] = !S.t[el.dataset.t]; }
+  else if(el.dataset.t){ if(el.dataset.t==="saber2026" && !permiteSaber2026()) return; S.t[el.dataset.t] = !S.t[el.dataset.t]; }
   const clave = el.dataset.e ? "e:"+el.dataset.e : el.dataset.s ? "s:"+el.dataset.s : "t:"+el.dataset.t;
   todo();
   const nuevo = document.querySelector(`[data-${clave.split(":")[0]}="${clave.split(":")[1]}"]`); if(nuevo) nuevo.focus();

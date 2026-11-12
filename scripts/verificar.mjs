@@ -36,7 +36,7 @@ assert.equal(run('filtrados().length'),context.window.OFERTA.filter(o=>o.i===ins
 assert.equal(node('carreras').hidden,false);
 assert.equal((node('universidades-inicio').innerHTML.match(/data-universidad=/g)||[]).length,new Set(context.window.OFERTA.map(o=>o.i)).size);
 // Trayectoria Saber 11 V2: selección expresa y máximo no acumulable.
-run('S=VACIO();S.t={saber2026:true};todo()');assert.equal(run('PARTES.t'),5);assert.equal(run('PUNTAJE'),5);
+run('S=VACIO();S.t={saber2026:true};todo()');assert.equal(run('PARTES.t'),0);assert.equal(run('PUNTAJE'),0);
 run('S.t.utc=true;S.t.jco=true;calcular()');assert.equal(run('PARTES.t'),5);
 run('S=VACIO();S.saber=99;calcular()');assert.equal(run('PARTES.t'),0,'El percentil no acredita las demás condiciones');
 run('S.t.saber2026=true;calcular()');assert.equal(run('PUNTAJE'),45);
@@ -51,7 +51,7 @@ run('S.saber=101;todo()');assert.equal(node('siguiente').disabled,true);node('si
 run('S.saber="";todo()');node('siguiente').listeners.click();assert.equal(run('paso'),3);
 assert.ok(node('siguiente').innerHTML.includes('Ninguna me aplica: ver resultado'));
 node('siguiente').listeners.click();assert.equal(run('paso'),4);assert.equal(run('PUNTAJE'),0);
-run('S.t.saber2026=true;todo();cambiarPaso(3)');assert.ok(node('siguiente').innerHTML.includes('Ver mi resultado'));
+run('S.saber=99;S.t.saber2026=true;todo();cambiarPaso(3)');assert.ok(node('siguiente').innerHTML.includes('Ver mi resultado'));
 node('atras').listeners.click();assert.equal(run('S.t.saber2026'),true);
 console.log('OK: sintaxis, recursos, IDs, inicio, navegación y límites de puntajes. No sustituye pruebas de navegador.');
 
@@ -83,3 +83,10 @@ assert.equal(run("filtrados().length"),run("OFERTA.filter(o=>Number.isFinite(o.m
 assert.equal(node("comparacion-activa").hidden,false);assert.equal(node("carreras").hidden,false);
 node("ver-toda-oferta").listeners.click();assert.equal(run("filtrados().length"),214);assert.equal(node("comparacion-activa").hidden,true);
 console.log("OK: comparación directa, filtro explícito y retorno a toda la oferta.");
+
+// Coherencia Saber 11: no modificar percentil, no activar condición automáticamente.
+for(const valor of ["",80,98,99.5,101]){run("S=VACIO();S.saber="+JSON.stringify(valor)+";S.t.saber2026=true;todo()");assert.equal(run("S.saber"),valor);assert.equal(run("PARTES.t"),0);assert.equal(run("S.t.saber2026"),false);}
+for(const valor of [99,100]){run("S=VACIO();S.saber="+valor+";todo()");assert.equal(run("PARTES.t"),0);run("S.t.saber2026=true;todo()");assert.equal(run("PARTES.t"),5);assert.equal(run("PUNTAJE"),45);}
+run("S.modo=\"puesto\";todo()");assert.equal(run("S.saber"),100);assert.equal(run("S.t.saber2026"),false);assert.equal(run("PARTES.t"),0);
+run("S=VACIO();S.saber=80;S.t={saber2026:true,utc:true};todo()");assert.equal(run("PARTES.t"),5);assert.equal(run("S.t.saber2026"),false);
+console.log("OK: regla percentil 99/100, cambio de modalidad y selección guardada incompatible.");
