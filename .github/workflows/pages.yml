@@ -1,0 +1,47 @@
+name: Validar y publicar calculadora
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publicar:
+        description: Publicar esta versión en GitHub Pages
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/verificar.mjs
+      - name: Preparar archivos públicos
+        if: github.event_name == 'workflow_dispatch' && inputs.publicar
+        run: |
+          mkdir -p dist/assets
+          cp index.html oferta.js universidades.js experiencia.css dist/
+          find assets/atenea assets/universidades -type f ! -name '*.md' -exec cp --parents {} dist/ \;
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'workflow_dispatch' && inputs.publicar
+        with:
+          path: dist
+  publicar:
+    if: github.event_name == 'workflow_dispatch' && inputs.publicar && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    needs: validar
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

@@ -3,3 +3,9 @@
 *.xlsx
 ~$*
 __pycache__/
+
+.qa-deps/
+
+# Plan de trabajo local e ilustración anterior no utilizada
+PLAN_REDISENO.md
+assets/estudiantes-bogota.png
