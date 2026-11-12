@@ -282,7 +282,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="experiencia.css?v=20261112-je6">
+<link rel="stylesheet" href="experiencia.css?v=20261112-dimensiones">
 </head>
 <body>
 
@@ -345,7 +345,7 @@
       <div class="hero-actions"><button class="btn pri" data-ir="puntaje">Estima tu puntaje</button><button class="btn" id="explorar-inicio">Explora según tu interés y compara <span aria-hidden="true">↗</span></button></div>
       <p class="hero-note">Una herramienta para orientarte en Jóvenes a la E.</p>
     </div>
-    <div class="hero-art"><img src="assets/atenea/educacion-posmedia.jpg" width="1947" height="1947" fetchpriority="high" alt="Imagen de educación posmedia del portal de la Agencia Atenea."><div class="art-tag"><span>TU FUTURO TIENE</span><strong>muchos caminos.</strong></div><button id="movimiento" class="motion-toggle" aria-pressed="false">Pausar movimiento</button></div>
+    <div class="hero-art"><img src="assets/atenea/educacion-posmedia.jpg" width="1947" height="1947" fetchpriority="high" alt="Imagen de educación posmedia del portal de la Agencia Atenea."><div class="art-tag"><span>TU FUTURO TIENE</span><strong>muchos caminos.</strong></div></div>
     <svg class="hero-circuit" viewBox="0 0 660 150" fill="none" aria-hidden="true"><path d="M0 115H150L215 50H390L435 95H610M0 135H170L235 70H370L415 115H660M75 15H210L245 50"/><circle cx="610" cy="95" r="5"/><circle cx="210" cy="15" r="4"/></svg>
   </div>
   <div class="route-strip"><button data-ir="puntaje"><b>01</b><span>Estima tu puntaje<small>Recorre las cuatro dimensiones</small></span><i aria-hidden="true">↗</i></button><button data-ir="carreras"><b>02</b><span>Explora según tu interés y compara<small>Mira el puntaje mínimo de la convocatoria JE4</small></span><i aria-hidden="true">↗</i></button><button data-ir="opciones"><b>03</b><span>Prepara tus opciones<small>Elige y ordena tres programas</small></span><i aria-hidden="true">↗</i></button></div>
@@ -385,7 +385,7 @@
         <div class="tarjeta paso" data-paso="1" hidden>
           <div class="paso-cab">
             <div class="ico"><svg class="i"><use href="#i-casa"/></svg></div>
-            <div><h2>Tu hogar</h2><p>Elige tu grupo del Sisbén IV o, si no tienes Sisbén, tu situación. Se toma una sola opción.</p></div>
+            <div><h2>Tus características socioeconómicas</h2><p>Elige tu grupo del Sisbén IV o, si no tienes Sisbén, tu situación. Se toma una sola opción.</p></div>
             <span class="tope">hasta 40 pts</span>
           </div>
           <div class="fichas" id="f_sisben" role="radiogroup" aria-label="Sisbén"></div>
@@ -762,7 +762,7 @@ function pintarSaber(){
     <tr><th>Puntos</th>${tabla.map((r,i)=>`<td class="${i===DETALLE.idx?"activa":""}">${r[2]}</td>`).join("")}</tr></table>`;
 }
 
-const NOMBRES_PASO = ["Quién eres","Tu hogar","Saber 11","Tu camino","Resultado"];
+const NOMBRES_PASO = ["Quién eres","Tus características socioeconómicas","Saber 11","Tu camino","Resultado"];
 function pintarPasos(){
   const pts = [PARTES.e, PARTES.ec, PARTES.m, PARTES.t];
   $("pasos").innerHTML = NOMBRES_PASO.map((n,i)=>`<button type="button" class="pasito ${i<paso?"hecho":""}" data-ir-paso="${i}" aria-label="${i+1}. ${n}" ${i===paso?'aria-current="step"':""}>
@@ -778,8 +778,8 @@ function pintarPasos(){
 
 function pintarContinuacion(){
   const sinE = !ESTRUCTURAL.some(x=>S.e[x.id]), sinT = !TRAYECTORIAS.some(x=>S.t[x.id]);
-  const etiquetas = [sinE?"Ninguna me aplica: continuar":"Continuar a Tu hogar", S.sisben<0?"Continuar sin este dato":"Continuar a Saber 11", String(S.saber).trim()===""?"Continuar sin este dato":"Continuar a Tu camino", sinT?"Ninguna me aplica: ver resultado":"Ver mi resultado"];
-  const ayudas = [sinE?"No tienes que seleccionar una condición para avanzar. Después revisaremos tu hogar.":"Ahora revisaremos las condiciones de tu hogar.", S.sisben<0?"Si aún no tienes este dato, puedes continuar. Tu estimación no incluirá puntos por Tu hogar hasta que lo completes.":"El siguiente paso es tu resultado de Saber 11.", DETALLE.err|| (String(S.saber).trim()===""?"Puedes consultar tu resultado después. Por ahora, la estimación no incluirá puntos de mérito académico.":"Ya casi terminas. Solo falta revisar tu trayectoria."), sinT?"Puedes terminar sin marcar opciones. Este criterio sumará 0 puntos.":"Sumas 5 puntos en este criterio, aunque marques varias condiciones."];
+  const etiquetas = [sinE?"Ninguna me aplica: continuar":"Continuar a tus características socioeconómicas", S.sisben<0?"Continuar sin este dato":"Continuar a Saber 11", String(S.saber).trim()===""?"Continuar sin este dato":"Continuar a Tu camino", sinT?"Ninguna me aplica: ver resultado":"Ver mi resultado"];
+  const ayudas = [sinE?"No tienes que seleccionar una condición para avanzar. Después revisaremos tus características socioeconómicas.":"Ahora revisaremos tus características socioeconómicas.", S.sisben<0?"Si aún no tienes este dato, puedes continuar. Tu estimación no incluirá puntos por tus características socioeconómicas hasta que lo completes.":"El siguiente paso es tu resultado de Saber 11.", DETALLE.err|| (String(S.saber).trim()===""?"Puedes consultar tu resultado después. Por ahora, la estimación no incluirá puntos de mérito académico.":"Ya casi terminas. Solo falta revisar tu trayectoria."), sinT?"Puedes terminar sin marcar opciones. Este criterio sumará 0 puntos.":"Sumas 5 puntos en este criterio, aunque marques varias condiciones."];
   $("progreso-paso").textContent = paso===4?"Tu resultado estimado":"Paso "+(paso+1)+" de 4 · "+NOMBRES_PASO[paso];
   $("ayuda-continuar").hidden = paso===4;
   $("ayuda-continuar").textContent = ayudas[paso]||"";
@@ -796,7 +796,7 @@ function cambiarPaso(nuevo){
 
 // ====== MEDIDORES Y MENSAJES ======
 function desglose(){
-  return [["e","Quién eres"],["ec","Tu hogar"],["m","Saber 11"],["t","Tu camino"]].map(([k,n])=>`<div class="linea-c">
+  return [["e","Quién eres"],["ec","Tus características socioeconómicas"],["m","Saber 11"],["t","Tu camino"]].map(([k,n])=>`<div class="linea-c">
     <div class="t"><span>${n}</span><b>${PARTES[k]} / ${TOPE[k]}</b></div>
     <div class="riel"><i style="width:${100*PARTES[k]/TOPE[k]}%"></i></div></div>`).join("");
 }
@@ -1026,7 +1026,6 @@ $("universidades-inicio").addEventListener("click",ev=>{const b=ev.target.closes
 $("explorar-inicio").addEventListener("click",()=>{$("descubre-titulo").setAttribute("tabindex","-1");$("descubre-titulo").focus({preventScroll:true});$("descubre").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});});
 $("inicio-intereses").innerHTML = Object.entries(CAMPOS).filter(([c])=>OFERTA.some(o=>o.campo===c)).map(([c,k],i)=>`<button class="interest-tile" data-inicio-campo="${esc(c)}">${arteInteres(c)}<b>${k.n}</b><small>${k.d}</small><span class="tile-count">${OFERTA.filter(o=>o.campo===c).length} programas</span></button>`).join("");
 $("inicio-intereses").addEventListener("click",ev=>{const b=ev.target.closest("[data-inicio-campo]");if(!b)return;filtroCampo=b.dataset.inicioCampo;["f_texto","f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");$("f_alcance").checked=false;visibles=24;pintarCarreras();irA("carreras");$("tab-carreras").focus();});
-$("movimiento").addEventListener("click",()=>{const paused=document.body.classList.toggle("motion-paused");$("movimiento").setAttribute("aria-pressed",paused);$("movimiento").textContent=paused?"Activar movimiento":"Pausar movimiento";});
 todo();
 irA(location.hash.slice(1) || "inicio", false);
 </script>
