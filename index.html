@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Explora tu futuro · Jóvenes a la E 6 · Atenea</title>
-<meta name="description" content="Calcula tu puntaje para la sexta convocatoria de Jóvenes a la E y explora carreras y compara referencias históricas.">
+<meta name="description" content="Estima tu puntaje para la sexta convocatoria de Jóvenes a la E y explora carreras y compara referencias históricas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -326,12 +326,12 @@
     <a class="marca" href="#inicio" data-ir="inicio" aria-label="Atenea · Inicio de la calculadora"><img src="assets/atenea/atenea.png" width="210" height="63" alt="Atenea, Agencia Distrital para la Educación Superior, la Ciencia y la Tecnología"></a>
     <nav class="pestanas" role="tablist" aria-label="Secciones">
 <button class="pestana" role="tab" id="tab-inicio" aria-controls="inicio" data-tab="inicio">Explora</button>
-      <button class="pestana" role="tab" id="tab-puntaje" aria-controls="puntaje" data-tab="puntaje"><svg class="i"><use href="#i-calc"/></svg>Mi puntaje</button>
+      <button class="pestana" role="tab" id="tab-puntaje" aria-controls="puntaje" data-tab="puntaje"><svg class="i"><use href="#i-calc"/></svg>Estima tu puntaje</button>
       <button class="pestana" role="tab" id="tab-carreras" aria-controls="carreras" data-tab="carreras"><svg class="i"><use href="#i-brujula"/></svg>Carreras</button>
       <button class="pestana" role="tab" id="tab-opciones" aria-controls="opciones" data-tab="opciones"><svg class="i"><use href="#i-estrella"/></svg>Mis opciones <span class="cont" id="n_opc" hidden>0</span></button>
       <button class="pestana" role="tab" id="tab-dudas" aria-controls="dudas" data-tab="dudas"><svg class="i"><use href="#i-ayuda"/></svg>Dudas</button>
     </nav>
-    <div class="pildora" aria-live="polite"><span>Tu puntaje</span><b id="pild">0</b></div>
+    <div class="pildora" aria-live="polite"><span>Puntaje estimado</span><b id="pild">0</b></div>
   </div>
 </div>
 
@@ -341,17 +341,17 @@
   <div class="hero">
     <div class="hero-copy"><div class="campaign-label"><span>JÓVENES A LA E</span><b>6</b><small>EDUCACIÓN SUPERIOR · IES PRIVADAS</small></div>
       <h1>Tu próximo<br>capítulo<br><em>empieza aquí.</em></h1>
-      <p>Hay una carrera que conecta con lo que te mueve. Descúbrela, conoce tu puntaje y prepara tus tres opciones.</p>
-      <div class="hero-actions"><button class="btn pri" id="explorar-inicio">Explorar carreras <span aria-hidden="true">↗</span></button><button class="btn" data-ir="puntaje">Calcular mi puntaje</button></div>
+      <p>Hay una carrera que conecta con lo que te mueve. Estima tu puntaje, explora según tu interés y compara para preparar tus tres opciones.</p>
+      <div class="hero-actions"><button class="btn pri" data-ir="puntaje">Estima tu puntaje</button><button class="btn" id="explorar-inicio">Explora según tu interés y compara <span aria-hidden="true">↗</span></button></div>
       <p class="hero-note">Una herramienta para orientarte en Jóvenes a la E.</p>
     </div>
     <div class="hero-art"><img src="assets/atenea/educacion-posmedia.jpg" width="1947" height="1947" fetchpriority="high" alt="Imagen de educación posmedia del portal de la Agencia Atenea."><div class="art-tag"><span>TU FUTURO TIENE</span><strong>muchos caminos.</strong></div><button id="movimiento" class="motion-toggle" aria-pressed="false">Pausar movimiento</button></div>
     <svg class="hero-circuit" viewBox="0 0 660 150" fill="none" aria-hidden="true"><path d="M0 115H150L215 50H390L435 95H610M0 135H170L235 70H370L415 115H660M75 15H210L245 50"/><circle cx="610" cy="95" r="5"/><circle cx="210" cy="15" r="4"/></svg>
   </div>
-  <div class="route-strip"><button data-ir="carreras"><b>01</b><span>Explora lo que te gusta<small>Encuentra carreras por interés</small></span><i aria-hidden="true">↗</i></button><button data-ir="puntaje"><b>02</b><span>Conoce tu puntaje<small>Recorre los cuatro criterios</small></span><i aria-hidden="true">↗</i></button><button data-ir="opciones"><b>03</b><span>Prepara tus opciones<small>Elige y ordena tres programas</small></span><i aria-hidden="true">↗</i></button></div>
+  <div class="route-strip"><button data-ir="puntaje"><b>01</b><span>Estima tu puntaje<small>Recorre las cuatro dimensiones</small></span><i aria-hidden="true">↗</i></button><button data-ir="carreras"><b>02</b><span>Explora según tu interés y compara<small>Mira el puntaje mínimo de la convocatoria JE4</small></span><i aria-hidden="true">↗</i></button><button data-ir="opciones"><b>03</b><span>Prepara tus opciones<small>Elige y ordena tres programas</small></span><i aria-hidden="true">↗</i></button></div>
   <section class="university-section" aria-labelledby="universidades-titulo"><div class="section-heading"><div><span class="eyebrow">TU PRÓXIMO CAMPUS</span><h2 id="universidades-titulo">Instituciones para explorar</h2></div><p><b id="total-instituciones">39</b> instituciones en esta oferta.<br>Selecciona un logo para ver sus programas.</p></div><div class="university-rail" id="universidades-inicio" aria-label="Instituciones de la oferta"></div><p class="rail-hint">Desliza horizontalmente para ver todas las instituciones →</p></section>
   <section id="descubre" class="discover" aria-labelledby="descubre-titulo"><span class="eyebrow">EMPIEZA POR LO QUE TE MUEVE</span><h2 id="descubre-titulo">¿Qué te gustaría hacer?</h2><p>No tienes que tenerlo todo decidido. Elige un interés y conoce los programas relacionados.</p><div id="inicio-intereses" class="interest-grid"></div><button class="btn osc" data-ir="carreras">Explorar todos los programas ↗</button></section>
-  <section class="invitation"><div><span class="eyebrow">DA EL SIGUIENTE PASO</span><h2>Lo que sueñas merece<br>un siguiente paso.</h2><p>Guarda los programas que te interesan y ordénalos según lo que quieres estudiar. Esta herramienta orienta tu elección; la inscripción se realiza en los canales de Atenea.</p></div><div><button class="btn pri" data-ir="opciones">Organizar mis opciones</button><a class="official-link" href="https://agenciaatenea.gov.co/" target="_blank" rel="noopener">Consultar convocatoria en Atenea ↗</a></div></section>
+  <section class="invitation"><div><span class="eyebrow">DA EL SIGUIENTE PASO</span><h2>Lo que sueñas merece<br>un siguiente paso.</h2><p>Guarda los programas que te interesan y ordénalos según lo que quieres estudiar. Esta herramienta orienta tu elección; la inscripción se realiza en los canales de Atenea.</p></div><div><button class="btn pri" data-ir="opciones">Organizar mis opciones</button><a class="official-link" href="https://www.agenciaatenea.gov.co/convocatorias/convocatoria-jovenes-la-e-6-educacion-superior-en-instituciones-privadas" target="_blank" rel="noopener">Consultar convocatoria en Atenea ↗</a></div></section>
   <p class="orientation-note">Simulación orientativa. Los puntajes de Jóvenes a la E 4 son referencias históricas y no garantizan un cupo en la sexta convocatoria.</p>
 </section>
 
@@ -360,7 +360,7 @@
   <section class="panel-tab" role="tabpanel" id="puntaje" aria-labelledby="tab-puntaje">
     <div class="portada" id="portada">
       <h1>Tu carrera puede estar más cerca de lo que crees</h1>
-      <p>Responde cuatro preguntas cortas, mira cuántos puntos sumas y compara tu puntaje con referencias históricas de las carreras. Ninguna respuesta te quita puntos.</p>
+      <p>Recorre las cuatro dimensiones, mira cuántos puntos sumas y compara tu puntaje con referencias históricas de las carreras. Ninguna respuesta te quita puntos.</p>
     </div>
 
     <p id="progreso-paso" class="progreso-paso" aria-live="polite"></p>
@@ -555,7 +555,7 @@
       <div>
         <ol>
           <li>Atenea verifica los requisitos de participación; quienes los cumplen quedan habilitados.</li>
-          <li>A cada habilitado se le calcula el puntaje de selección (0 a 100) con los cuatro criterios.</li>
+          <li>A cada habilitado se le calcula el puntaje de selección (0 a 100) con las cuatro dimensiones.</li>
           <li>Los habilitados se ordenan de mayor a menor puntaje.</li>
           <li>En ese orden, y siguiendo la preferencia de programas de cada aspirante, se asigna el cupo si el programa aún tiene cupos y si hay recursos de Atenea o del Fondo de Desarrollo Local de la localidad de residencia.</li>
         </ol>
@@ -614,8 +614,8 @@
 <script src="universidades.js"></script>
 <script>
 // ====== CONFIGURACIÓN ======
-// Enlace al micrositio de inscripción de la convocatoria. Reemplazar por el definitivo.
-const ENLACE_INSCRIPCION = "https://agenciaatenea.gov.co/";
+// Enlace oficial de la sexta convocatoria.
+const ENLACE_INSCRIPCION = "https://www.agenciaatenea.gov.co/convocatorias/convocatoria-jovenes-la-e-6-educacion-superior-en-instituciones-privadas";
 const MARGEN_CERCA = 10; // puntos bajo el mínimo que se consideran "muy cerca"
 
 // ====== PARÁMETROS (Tabla 5 del lineamiento L57_EP) ======
@@ -848,7 +848,7 @@ function estado(min){
   const d = PUNTAJE - min;
   return d>=0 ? "si" : d>=-MARGEN_CERCA ? "cerca" : "reto";
 }
-const TXT_ESTADO = {sinref:["i-estrella","Sin referencia JE4"],si:["i-check","Igual o sobre referencia JE4"], cerca:["i-sube","Muy cerca"], reto:["i-meta","Meta exigente"], sin:["i-calc","Calcula tu puntaje"]};
+const TXT_ESTADO = {sinref:["i-estrella","Sin referencia JE4"],si:["i-check","Igual o sobre referencia JE4"], cerca:["i-sube","Muy cerca"], reto:["i-meta","Meta exigente"], sin:["i-calc","Estima tu puntaje"]};
 
 function arteInteres(c){const n=Object.keys(CAMPOS).indexOf(c);return `<span class="interes-arte" aria-hidden="true"><img src="assets/intereses/interes-${n}.webp" alt="" width="480" height="480" loading="lazy" decoding="async"></span>`;}
 function pintarIntereses(){
@@ -860,8 +860,8 @@ function pintarIntereses(){
       <span class="cuenta">${total} programas${sinRef?` · ${sinRef} sin referencia JE4`:""}</span></button>`;
   }).join("");
   $("aviso_puntaje").innerHTML = HAY_DATOS
-    ? `Tu puntaje <b class="n">${PUNTAJE}</b> <button type="button" class="btn fant" data-ir="puntaje" style="padding:4px 8px">Ajustar</button>`
-    : `Aún no calculas tu puntaje. <button type="button" class="btn pri" data-ir="puntaje" style="padding:6px 12px">Calcular</button>`;
+    ? `Tu puntaje estimado <b class="n">${PUNTAJE}</b> <button type="button" class="btn fant" data-ir="puntaje" style="padding:4px 8px">Ajustar</button>`
+    : `Aún no estimas tu puntaje. <button type="button" class="btn pri" data-ir="puntaje" style="padding:6px 12px">Estimar</button>`;
 }
 
 function filtrados(){
@@ -905,7 +905,7 @@ function tarjeta(o){
       <span class="m" style="left:${o.min}%"></span>
       ${HAY_DATOS?`<span class="yo" style="left:${PUNTAJE}%"></span>`:""}
     </div>
-    <div class="leyenda-min"><span>Último elegible JE4: <b>${o.min}</b></span>${HAY_DATOS?`<span>Tú: <b>${PUNTAJE}</b></span>`:""}</div>
+    <div class="leyenda-min"><span>Puntaje mínimo JE4: <b>${o.min}</b></span>${HAY_DATOS?`<span>Tú: <b>${PUNTAJE}</b></span>`:""}</div>
     `}
     <div class="pie">
       <span class="cupos"><b>${o.cupos}</b> ${o.cupos===1?"cupo":"cupos"} en JE6</span>
