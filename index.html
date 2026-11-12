@@ -282,7 +282,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="experiencia.css?v=20261112-sin-opciones">
+<link rel="stylesheet" href="experiencia.css?v=20261112-comparacion">
 </head>
 <body>
 
@@ -448,7 +448,7 @@
               <div class="desglose" id="r_desglose"></div>
               <div class="mensaje" id="r_mensaje"></div>
               <div class="acc-btn">
-                <button type="button" class="btn pri" data-ir="carreras"><svg class="i"><use href="#i-brujula"/></svg>Ver carreras a mi alcance</button>
+                <button type="button" class="btn pri" id="ver-comparacion" data-ir="carreras"><svg class="i"><use href="#i-brujula"/></svg>Ver programas con mínimo JE4 igual o menor</button>
                 <button type="button" class="btn" id="editar"><svg class="i"><use href="#i-recarga"/></svg>Revisar mis respuestas</button>
               </div>
             </div>
@@ -479,14 +479,15 @@
   <section class="panel-tab" role="tabpanel" id="carreras" aria-labelledby="tab-carreras" hidden>
     <div class="cab-tab">
       <div>
-        <h1>¿Qué te mueve?</h1>
+        <h1 id="titulo-carreras" tabindex="-1">Explora y compara programas</h1>
         <p>Elige lo que te gusta hacer y compara tu puntaje con el de la <b>última persona que obtuvo cupo</b> en cada programa en Jóvenes a la E 4. Es una referencia: en esta convocatoria cambian los cupos y los inscritos.</p>
       </div>
       <div class="aviso-puntaje" id="aviso_puntaje"></div>
     </div>
 
-    <div class="intereses" id="intereses" role="group" aria-label="Áreas de interés"></div>
-    <div class="desliza">Desliza para ver más áreas →</div>
+    <details id="selector-intereses" class="selector-intereses"><summary>Filtrar por área de interés <span id="interes-activo"></span></summary><div class="intereses" id="intereses" role="group" aria-label="Áreas de interés"></div></details>
+    <div id="comparacion-activa" class="comparacion-activa" hidden></div>
+    <button type="button" class="btn fant" id="ver-toda-oferta" hidden>Ver toda la oferta JE6, incluida la que no tiene referencia</button>
 
     <div class="filtros">
       <div class="buscar"><label for="f_texto">Busca una carrera o institución</label><input type="search" id="f_texto" placeholder="Ej.: enfermería, software, Javeriana"></div>
@@ -883,6 +884,13 @@ function tarjeta(o){
 
 function pintarCarreras(){
   pintarIntereses();
+  const coincidencias=OFERTA.filter(o=>Number.isFinite(o.min)&&o.min<=PUNTAJE).length;
+  $("ver-comparacion").textContent=HAY_DATOS?`Ver ${coincidencias} programas con mínimo JE4 igual o menor`:"Explorar todos los programas";
+  const comparando=$("f_alcance").checked && HAY_DATOS;
+  $("comparacion-activa").hidden=!comparando;
+  $("ver-toda-oferta").hidden=!comparando && !filtroCampo;
+  $("interes-activo").textContent=filtroCampo?"· "+CAMPOS[filtroCampo].n:"";
+  $("comparacion-activa").innerHTML=comparando ? `Mostramos programas cuyo mínimo JE4 fue igual o menor a tus <b>${PUNTAJE} puntos estimados</b>. Es una referencia histórica, no una garantía de cupo. Hay <b>${OFERTA.filter(o=>o.min===null).length} ofertas sin referencia JE4</b> que también puedes explorar en la oferta completa.` : "";
   const l = filtrados(), si = l.filter(o=>Number.isFinite(o.min) && PUNTAJE>=o.min).length;
   $("resumen").innerHTML = l.length===0 ? "" : HAY_DATOS ? `<b>${l.length}</b> programas · <b>${l.filter(o=>o.min===null).length}</b> sin referencia JE4 · <b>${si}</b> con referencia ≤ tu puntaje` : `<b>${l.length}</b> programas`;
   $("programas").innerHTML = l.length===0
@@ -912,10 +920,23 @@ window.addEventListener("popstate", ()=>irA(location.hash.slice(1), false));
 document.addEventListener("click", ev=>{
   const b = ev.target.closest("[data-ir]"); if(!b) return;
   ev.preventDefault();
-  if(b.dataset.ir==="carreras" && b.closest("[data-paso='4']") && HAY_DATOS){ $("f_alcance").checked = false; visibles=24; pintarCarreras(); }
+  if(b.id==="ver-comparacion"){ abrirComparacion(); return; }
   irA(b.dataset.ir);
 });
 
+function abrirComparacion(){
+  filtroCampo=null;
+  ["f_texto","f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");
+  $("f_alcance").checked=HAY_DATOS;
+  $("f_orden").value=HAY_DATOS?"cerca":"az";
+  $("selector-intereses").open=false;
+  visibles=24;pintarCarreras();irA("carreras");
+  $("titulo-carreras").focus({preventScroll:true});
+}
+$("ver-toda-oferta").addEventListener("click",()=>{
+  filtroCampo=null;["f_texto","f_nivel","f_mod","f_jor"].forEach(id=>$(id).value="");
+  $("f_alcance").checked=false;$("f_orden").value="az";visibles=24;pintarCarreras();
+});
 // ====== EVENTOS DEL ASISTENTE ======
 function todo(){ calcular(); pintarFichas(); pintarSaber(); pintarPasos(); pintarMedidores(); pintarAcciones(); pintarCarreras(); }
 function alternar(el){

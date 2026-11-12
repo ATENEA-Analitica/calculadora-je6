@@ -72,3 +72,14 @@ for(let n=0;n<10;n++) assert.ok(fs.existsSync(new URL('../assets/intereses/inter
 console.log('OK: 214 ofertas, 44 sin histórico, 2454 cupos, filtros sin puntaje inventado.');
 
 assert.ok(!html.includes('id="opciones"'));assert.ok(!html.includes('data-ir="opciones"'));run('irA("opciones",false)');assert.equal(node("inicio").hidden,false);
+
+// Comparación desde el resultado: limpiar filtros antiguos y mostrar la lista pertinente.
+run('S=VACIO();S.e={etnia:true};calcular();filtroCampo=Object.keys(CAMPOS)[0]');
+node("f_texto").value="búsqueda anterior";node("f_nivel").value="otro";node("selector-intereses").open=true;
+run("abrirComparacion()");
+assert.equal(node("f_texto").value,"");assert.equal(node("f_nivel").value,"");
+assert.equal(node("selector-intereses").open,false);assert.equal(node("f_alcance").checked,true);
+assert.equal(run("filtrados().length"),run("OFERTA.filter(o=>Number.isFinite(o.min)&&o.min<=PUNTAJE).length"));
+assert.equal(node("comparacion-activa").hidden,false);assert.equal(node("carreras").hidden,false);
+node("ver-toda-oferta").listeners.click();assert.equal(run("filtrados().length"),214);assert.equal(node("comparacion-activa").hidden,true);
+console.log("OK: comparación directa, filtro explícito y retorno a toda la oferta.");

@@ -75,3 +75,5 @@ ol.mias .mini{width:auto;min-width:44px;height:auto;min-height:44px;padding:8px;
 
 @media(min-width:601px) and (max-width:900px){#intereses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}}
 .interest-tile>small{margin:0 0 8px}.interes-arte{aspect-ratio:1.2}
+
+.selector-intereses{margin:0 0 16px;border:1px solid var(--linea);border-radius:14px;background:white;padding:0 14px}.selector-intereses>summary{cursor:pointer;padding:15px 0;font-weight:600;color:#065094;min-height:48px}.selector-intereses .intereses{margin-top:10px}.comparacion-activa{background:#eaf6fc;color:#164975;border-left:4px solid #065094;border-radius:8px;padding:14px 16px;line-height:1.6;font-size:14px;margin-bottom:10px}#ver-toda-oferta{margin-bottom:16px;white-space:normal;text-align:left}#titulo-carreras:focus{outline:none}
