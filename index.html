@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de puntaje · Jóvenes a la E 6 · IES privadas</title>
+<style>
+  /* ====== LÍNEA GRÁFICA: ajuste aquí los colores y la tipografía del manual de marca ====== */
+  :root{
+    --marca: #1f2a5c;        /* color principal */
+    --marca-2: #3d4fa3;      /* color secundario */
+    --acento: #e2530a;       /* naranja de la franja superior */
+    --tinta: #1c2130;
+    --tinta-2: #5a6275;
+    --fondo: #f4f5f9;
+    --tarjeta: #ffffff;
+    --linea: #dfe2ec;
+    --suave: #eef0f8;
+    --ok: #1d7a4f;
+    --alerta: #b3261e;
+    --fuente: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--fuente);color:var(--tinta);background:var(--fondo);line-height:1.5;font-size:15px}
+  header{background:var(--acento);color:#fff;border-bottom:6px solid var(--marca)}
+  .cab{max-width:1180px;margin:0 auto;padding:22px 20px;display:flex;gap:18px;align-items:center}
+  header h1{margin:0;font-size:22px;line-height:1.25;font-weight:700}
+  header p{margin:4px 0 0;font-size:14px;color:#fff}
+  main{max-width:1180px;margin:0 auto;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:22px;align-items:start}
+  .aviso{grid-column:1/-1;background:#fff4ec;border:1px solid #f3c6a8;border-left:5px solid var(--acento);border-radius:8px;padding:12px 16px;font-size:14px}
+  .tarjeta{background:var(--tarjeta);border:1px solid var(--linea);border-radius:10px;margin-bottom:18px;overflow:hidden}
+  .tarjeta > h2{margin:0;padding:14px 18px;background:var(--suave);font-size:16px;color:var(--marca);display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--linea)}
+  .tarjeta > h2 span{font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+  .regla{padding:12px 18px;font-size:13.5px;color:var(--tinta-2);border-bottom:1px solid var(--linea);background:#fbfbfd}
+  .fila{display:grid;grid-template-columns:minmax(0,1fr) 190px 54px;gap:12px;align-items:start;padding:12px 18px;border-bottom:1px solid var(--linea)}
+  .fila:last-child{border-bottom:0}
+  .fila label{font-weight:600;display:block}
+  .alcance{font-size:13px;color:var(--tinta-2);margin-top:3px}
+  .alcance b{color:var(--tinta)}
+  select,input[type=number]{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #b9bfd2;border-radius:6px;background:#fff;color:var(--tinta)}
+  select:focus,input:focus{outline:3px solid rgba(61,79,163,.3);border-color:var(--marca-2)}
+  select:disabled{background:#eceef3;color:#8b90a0}
+  .pts{font-weight:700;text-align:right;font-variant-numeric:tabular-nums;padding-top:8px;color:var(--tinta-2)}
+  .pts.on{color:var(--ok)}
+  .error{color:var(--alerta);font-size:13px;margin-top:4px;font-weight:600}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:6px}
+  th,td{border:1px solid var(--linea);padding:4px 8px;text-align:center}
+  th{background:var(--suave);color:var(--marca)}
+  tr.activa td{background:#e3f3ea;font-weight:700}
+  details{padding:0 18px;border-bottom:1px solid var(--linea)}
+  details:last-child{border-bottom:0}
+  summary{cursor:pointer;padding:12px 0;font-weight:600;color:var(--marca)}
+  details > div{padding:0 0 14px;font-size:13.5px;color:var(--tinta-2)}
+  details ol,details ul{margin:6px 0;padding-left:20px}
+  aside{position:sticky;top:14px}
+  .res{background:var(--tarjeta);border:1px solid var(--linea);border-top:6px solid var(--marca);border-radius:10px;padding:18px}
+  .res h2{margin:0;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-2)}
+  .total{display:flex;align-items:baseline;gap:6px;margin:4px 0 12px}
+  .total strong{font-size:58px;line-height:1;color:var(--marca);font-variant-numeric:tabular-nums}
+  .total span{font-size:18px;color:var(--tinta-2)}
+  .barra{margin:12px 0}
+  .barra .t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600}
+  .barra .t b{font-variant-numeric:tabular-nums}
+  .riel{height:9px;background:var(--suave);border-radius:5px;overflow:hidden;margin:4px 0}
+  .riel i{display:block;height:100%;background:var(--marca-2);border-radius:5px;transition:width .2s}
+  .calc{font-size:12.5px;color:var(--tinta-2)}
+  .nota{font-size:12.5px;color:var(--tinta-2);border-top:1px solid var(--linea);margin-top:14px;padding-top:12px}
+  .botones{display:flex;gap:8px;margin-top:14px}
+  button{font:inherit;font-weight:600;padding:8px 14px;border-radius:6px;border:1.5px solid var(--marca);background:#fff;color:var(--marca);cursor:pointer;flex:1}
+  button.pri{background:var(--marca);color:#fff}
+  footer{max-width:1180px;margin:0 auto;padding:0 20px 30px;font-size:12.5px;color:var(--tinta-2)}
+  @media (max-width:900px){
+    main{grid-template-columns:1fr}
+    aside{position:static;order:-1}
+    .fila{grid-template-columns:1fr 54px}
+    .fila > div:first-child{grid-column:1/-1}
+    .cab{flex-wrap:wrap}
+  }
+  @media print{aside{position:static}.botones{display:none}body{background:#fff}details{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="cab">
+    <div>
+      <h1>Calculadora de puntaje · Jóvenes a la E 6</h1>
+      <p>Línea de admisión general con instituciones de educación superior privadas · Sexta convocatoria</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="aviso">
+    <b>Resultado informativo.</b> Esta calculadora aplica los criterios de puntuación de la Tabla 5 del Lineamiento Operativo dirigido a aspirantes (L57_EP, versión 2, 11/11/2026). El puntaje definitivo lo asigna la Agencia Atenea después de verificar la información con fuentes oficiales, y un puntaje alto no garantiza cupo.
+  </div>
+
+  <section id="form">
+
+    <!-- 1 -->
+    <div class="tarjeta">
+      <h2>1. Vulnerabilidad estructural <span>Acumulable · hasta 15 puntos</span></h2>
+      <div class="regla">Criterio acumulativo hasta 15 puntos: aunque se cuente con varias de las características, solo se suma puntaje hasta alcanzar ese límite.</div>
+      <div id="estructural"></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="tarjeta">
+      <h2>2. Vulnerabilidad económica <span>No acumulable · hasta 40 puntos</span></h2>
+      <div class="regla">Criterio no acumulable. Para el puntaje por Sisbén solo se consideran encuestas realizadas en hogares de Bogotá-Región, validadas por el DNP con las marcas 0 (registro válido) y 10 (en verificación). Municipios de Bogotá-Región válidos: Soacha, Cajicá, Chía, Cota, Facatativá, Funza, La Calera, Madrid, Mosquera, Sesquilé, Sibaté, Sopó, Tenjo, Tocancipá, Ubaté y Zipaquirá.</div>
+      <div class="fila">
+        <div>
+          <label for="sisben">Grupo del Sisbén IV, o condición de la persona sin Sisbén</label>
+          <div class="alcance"><b>Cómo se verifica:</b> Departamento Nacional de Planeación (DNP), certificados de pertenencia étnica cargados en SICORE y base de datos SIMAT del Ministerio de Educación Nacional y de la Secretaría de Educación de Bogotá.</div>
+        </div>
+        <select id="sisben"></select>
+        <div class="pts" id="p_sisben">0</div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="tarjeta">
+      <h2>3. Mérito académico <span>Hasta 40 puntos</span></h2>
+      <div class="regla">Se asigna por <b>puesto</b> o por <b>percentil</b> de la prueba Saber 11, según el año de presentación: el criterio de puesto aplica para quienes presentaron la prueba antes de 2015. Solo se consideran exámenes en estado "PUBLICADO" según la validación del ICFES. Para personas con discapacidad que presentaron el cuadernillo con ajustes razonables, se usa el percentil reportado por el ICFES para esa versión de la prueba.</div>
+      <div class="fila">
+        <div>
+          <label for="anio">¿Cuándo presentó la prueba Saber 11?</label>
+          <div class="alcance"><b>Cómo se verifica:</b> Instituto Colombiano para la Evaluación de la Educación (ICFES).</div>
+        </div>
+        <select id="anio">
+          <option value="pct">En 2015 o después</option>
+          <option value="puesto">Antes de 2015</option>
+        </select>
+        <div class="pts"></div>
+      </div>
+      <div class="fila">
+        <div>
+          <label for="saber" id="l_saber">Percentil obtenido (0 a 100)</label>
+          <div class="alcance" id="a_saber"></div>
+          <div class="error" id="e_saber"></div>
+          <div id="t_saber"></div>
+        </div>
+        <input type="number" id="saber" min="0" step="1" inputmode="numeric" placeholder="Escriba el número">
+        <div class="pts" id="p_saber">0</div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="tarjeta">
+      <h2>4. Fomento a trayectorias <span>No acumulable · hasta 5 puntos</span></h2>
+      <div class="regla">Criterio no acumulable: se asignan hasta 5 puntos, aunque se cumpla más de una condición.</div>
+      <div id="trayectorias"></div>
+    </div>
+
+    <!-- Alcance -->
+    <div class="tarjeta">
+      <h2>Alcance del puntaje</h2>
+      <details>
+        <summary>Cómo se usa el puntaje para asignar cupos</summary>
+        <div>
+          <ol>
+            <li>Atenea verifica los requisitos de participación; quienes los cumplen quedan habilitados.</li>
+            <li>A cada habilitado se le calcula el puntaje de selección (0 a 100) con los cuatro criterios.</li>
+            <li>Los habilitados se ordenan de mayor a menor puntaje.</li>
+            <li>En ese orden, y siguiendo la preferencia de programas de cada aspirante, se asigna el cupo si el programa aún tiene cupos y si hay recursos de Atenea o del Fondo de Desarrollo Local de la localidad de residencia.</li>
+          </ol>
+          Por la financiación de los Fondos de Desarrollo Local, una persona con menor puntaje puede recibir cupo antes que otra si su localidad todavía tiene recursos. También es posible cumplir requisitos y tener puntaje sin resultar elegible, si los cupos de los programas elegidos ya se asignaron.
+        </div>
+      </details>
+      <details>
+        <summary>Verificación de la información</summary>
+        <div>Los criterios de puntuación, con excepción del de personas transgénero, se verifican con registros administrativos de entidades nacionales y distritales. Cuando no existen fuentes oficiales, el aspirante debe cargar en la plataforma de inscripción los certificados o documentos correspondientes. La información corresponde a la fecha de corte de cada entidad, y cada entidad responde por la calidad de sus datos.</div>
+      </details>
+      <details>
+        <summary>Criterios de desempate</summary>
+        <div>Si varias personas con el mismo puntaje superan los cupos de un programa, se aplica este orden:
+          <ol>
+            <li>Mejor puntaje global en Saber 11.</li>
+            <li>Subgrupo del Sisbén IV más vulnerable.</li>
+            <li>Mayor puntaje en vulnerabilidad estructural.</li>
+            <li>Ser egresado de colegio oficial.</li>
+            <li>Haber votado en las últimas elecciones populares organizadas por la Registraduría, que para esta convocatoria es la elección de presidente de la República del 21 de junio de 2026 (certificado electoral cargado en SICORE).</li>
+            <li>Asignación aleatoria: a cada aspirante empatado se le genera un número aleatorio único, con semilla igual a la fecha del día siguiente al cierre de inscripciones (AAAAMMDD), y se prioriza el menor valor.</li>
+          </ol>
+        </div>
+      </details>
+      <details>
+        <summary>Colegios rurales que otorgan puntaje (Tabla 6)</summary>
+        <div>
+          <ul>
+            <li>Colegio Gimnasio del Campo Juan de la Cruz Varela (IED): sedes U.B. Unión y Erasmo Valencia, Sumapaz.</li>
+            <li>Colegio Campestre Jaime Garzón (IED): sedes U.B. Las Auras y Adelina Gutiérrez Palacios, Sumapaz.</li>
+            <li>Colegio El Destino (IED), Usme.</li>
+            <li>Colegio El Verjón (IED): sede El Verjón Alto, Santafé.</li>
+            <li>Colegio Rural Pasquilla (IED), Ciudad Bolívar.</li>
+            <li>Colegio Rural Quiba Alta (IED), Ciudad Bolívar.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Qué no incluye esta calculadora</summary>
+        <div>
+          <ul>
+            <li>La verificación de los requisitos mínimos de participación (numeral 5.6.3 del lineamiento).</li>
+            <li>Los requisitos de admisión propios de algunas IES, como puntaje mínimo en Saber 11, entrevistas o pruebas.</li>
+            <li>La disponibilidad de cupos y de recursos por localidad, que define si un puntaje alcanza o no.</li>
+            <li>La línea de Talentos Excepcionales, que tiene reglas distintas.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <aside>
+    <div class="res" aria-live="polite">
+      <h2>Puntaje estimado</h2>
+      <div class="total"><strong id="total">0</strong><span>/ 100</span></div>
+      <div id="barras"></div>
+      <div class="botones">
+        <button type="button" id="limpiar">Limpiar</button>
+        <button type="button" class="pri" onclick="window.print()">Imprimir</button>
+      </div>
+      <div class="nota">Cálculo con la información registrada aquí. El puntaje de selección lo asigna Atenea a los aspirantes habilitados, a partir de las fuentes oficiales de consulta.</div>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  Fuente: Agencia Distrital para la Educación Superior, la Ciencia y la Tecnología – Atenea. L57_EP Lineamiento Operativo dirigido a aspirantes, Sexta Convocatoria de Jóvenes a la E, versión 2 (11/11/2026), numerales 5.6.6, 5.6.6.1 y 5.6.6.2.
+</footer>
+
+<script>
+// ====== PARÁMETROS (Tabla 5 del lineamiento L57_EP V2) ======
+const TOPE = {e:15, ec:40, m:40, t:5};
+
+const ESTRUCTURAL = [
+  {id:"mujer", pts:7, t:"Mujer",
+   a:"Registraduría Nacional del Estado Civil."},
+  {id:"hijos", pts:5, t:"Mujer con hijos", depende:"mujer",
+   a:"La aspirante con hijos debe cargar en el sistema de inscripciones de Atenea la copia del registro civil de nacimiento de sus hijas o hijos para obtener el puntaje adicional."},
+  {id:"trans", pts:10, t:"Personas transgénero",
+   a:"Corresponde al autorreconocimiento del aspirante, según el mandato constitucional."},
+  {id:"etnia", pts:15, t:"Personas con pertenencia étnica",
+   opciones:["No","Comunidades negras, afrocolombianas o palenqueras","Raizales","Pueblos indígenas","Pueblo Rrom"],
+   a:"Comunidades negras, afrocolombianas o palenqueras, pueblos indígenas y pueblo Rrom: el aspirante debe cargar en la hoja de vida del sistema de inscripciones el certificado oficial descargado de la página del Ministerio del Interior; el cargue y la validación del soporte son necesarios para el puntaje. Población raizal: se verifica con SIMAT y no se requiere el certificado si la pertenencia puede validarse por esa fuente."},
+  {id:"vict", pts:10, t:"Víctimas del conflicto",
+   a:"RUV – Unidad para la Atención y Reparación Integral a las Víctimas, o Alta Consejería de Paz, Víctimas y Reconciliación de Bogotá."},
+  {id:"vbg", pts:10, t:"Víctimas de violencia de género",
+   a:"Secretaría Distrital de la Mujer."},
+  {id:"reinc", pts:10, t:"Reincorporados y reinsertados",
+   a:"Agencia para la Reincorporación y Normalización (ARN)."},
+  {id:"disc", pts:10, t:"Personas con discapacidad",
+   a:"Ministerio de Salud y Protección Social y/o Secretaría Distrital de Salud."},
+  {id:"fp", pts:10, t:"Miembro de la fuerza pública con discapacidad acreditado con el carné de beneficios según Ley 1699 de 2013 (numerales 2 y 3 del artículo 2)",
+   a:"Ministerio de Defensa Nacional."},
+  {id:"rural", pts:15, t:"Egresados de colegios en la localidad de Sumapaz o de colegios oficiales ubicados en zonas rurales de otras localidades a más de 1,5 kilómetros del perímetro urbano",
+   a:"Sistema Integrado de Matrícula (SIMAT), Directorio Único de Establecimientos de la Secretaría de Educación Distrital y cartografía oficial de la Unidad Administrativa Especial de Catastro Distrital. Los colegios que aplican están en la Tabla 6 (ver “Alcance del puntaje”)."}
+];
+
+const SISBEN = [
+  ["Seleccione…", 0],
+  ["SISBEN A", 40],
+  ["SISBEN B", 30],
+  ["SISBEN C", 20],
+  ["Persona sin SISBEN egresada de colegio oficial rural", 40],
+  ["Persona sin SISBEN egresada de colegio oficial urbano", 15],
+  ["Aspirante con pertenencia étnica indígena sin Sisbén", 30],
+  ["Ninguna de las anteriores", 0]
+];
+
+// [desde, hasta, puntos]
+const PERCENTIL = [[95,100,40],[90,94,35],[85,89,30],[80,84,25],[75,79,20],[70,74,15],[60,69,10],[50,59,5],[0,49,0]];
+const PUESTO    = [[1,50,40],[51,100,35],[101,150,30],[151,200,25],[201,250,20],[251,350,15],[351,450,10],[451,499,5],[500,Infinity,0]];
+
+const TRAYECTORIAS = [
+  {id:"utc", t:"Beneficiarios graduados o con terminación de materias del programa La U en Tu Colegio (UTC), con corte al cierre de inscripciones de la convocatoria",
+   a:"Agencia Atenea."},
+  {id:"je", t:"Beneficiarios graduados del programa Jóvenes a la E (antes Jóvenes a la U) del nivel técnico profesional o tecnológico, o certificados del nivel técnico laboral, con corte al cierre de la convocatoria",
+   a:"Agencia Atenea (base maestra de beneficiarios)."},
+  {id:"cons", t:"Consejeros de juventud",
+   a:"Secretaría Distrital de Gobierno."},
+  {id:"idrd", t:"Deportista destacado IDRD",
+   a:"Listado del Instituto Distrital de Recreación y Deporte (IDRD)."},
+  {id:"jco", t:"Jóvenes participantes de la estrategia intersectorial para la inclusión social y productiva “Jóvenes con Oportunidades”",
+   a:"Secretaría Distrital de Integración Social."},
+  {id:"p99", t:"Estudiantes de grado once al cierre de la inscripción, o bachilleres egresados, de institución educativa oficial de calendario A ubicada en Bogotá, que presentaron Saber 11 en julio de 2026 en Bogotá con puntaje global en los percentiles 99 o 100",
+   a:"SIMAT (matrícula o graduación) e ICFES (percentil)."}
+];
+const P_TRAY = 5;
+
+// ====== CONSTRUCCIÓN DEL FORMULARIO ======
+const $ = id => document.getElementById(id);
+function fila(item, prefijo){
+  const ops = item.opciones || ["No","Sí"];
+  return `<div class="fila">
+    <div><label for="${prefijo+item.id}">${item.t}</label>
+      <div class="alcance"><b>Cómo se verifica:</b> ${item.a}</div></div>
+    <select id="${prefijo+item.id}">${ops.map((o,i)=>`<option value="${i}">${o}</option>`).join("")}</select>
+    <div class="pts" id="p_${prefijo+item.id}">0</div>
+  </div>`;
+}
+$("estructural").innerHTML = ESTRUCTURAL.map(x=>fila(x,"e_")).join("");
+$("trayectorias").innerHTML = TRAYECTORIAS.map(x=>fila(x,"t_")).join("");
+$("sisben").innerHTML = SISBEN.map((s,i)=>`<option value="${i}">${s[0]}</option>`).join("");
+
+const CRITERIOS = [["e","Vulnerabilidad estructural"],["ec","Vulnerabilidad económica"],["m","Mérito académico"],["t","Fomento a trayectorias"]];
+$("barras").innerHTML = CRITERIOS.map(([k,n])=>`<div class="barra">
+  <div class="t"><span>${n}</span><b><span id="v_${k}">0</span> / ${TOPE[k]}</b></div>
+  <div class="riel"><i id="b_${k}" style="width:0"></i></div>
+  <div class="calc" id="c_${k}"></div></div>`).join("");
+
+function pinta(id, pts){ const el=$(id); el.textContent=pts; el.classList.toggle("on", pts>0); }
+
+// ====== CÁLCULO ======
+function calcular(){
+  // 1. Estructural: suma con tope
+  const esMujer = $("e_mujer").value !== "0";
+  const selH = $("e_hijos");
+  selH.disabled = !esMujer; if(!esMujer) selH.value = "0";
+  let partes = [];
+  ESTRUCTURAL.forEach(x=>{
+    const p = $("e_"+x.id).value !== "0" ? x.pts : 0;
+    pinta("p_e_"+x.id, p); if(p) partes.push(p);
+  });
+  const sumaE = partes.reduce((a,b)=>a+b,0);
+  const e = Math.min(TOPE.e, sumaE);
+  $("c_e").textContent = partes.length===0 ? "Sin condiciones marcadas."
+    : partes.join(" + ") + " = " + sumaE + (sumaE>TOPE.e ? " → se aplica el tope de "+TOPE.e+"." : ".");
+
+  // 2. Económica: una sola variable
+  const s = SISBEN[+$("sisben").value];
+  const ec = Math.min(TOPE.ec, s[1]);
+  pinta("p_sisben", ec);
+  $("c_ec").textContent = +$("sisben").value===0 ? "Sin selección." : s[0] + " = " + ec + ".";
+
+  // 3. Mérito: percentil o puesto
+  const modo = $("anio").value, tabla = modo==="pct" ? PERCENTIL : PUESTO;
+  $("l_saber").textContent = modo==="pct" ? "Percentil obtenido (0 a 100)" : "Puesto obtenido (1 en adelante)";
+  $("a_saber").innerHTML = modo==="pct"
+    ? "Percentil de la prueba Saber 11 reportado por el ICFES."
+    : "Puesto en la prueba Saber 11 reportado por el ICFES. Aplica para pruebas presentadas antes de 2015.";
+  const crudo = $("saber").value.trim(); let m = 0, idx = -1, err = "", txt = "Sin dato.";
+  if(crudo!==""){
+    const v = Math.floor(Number(crudo));
+    if(isNaN(v) || (modo==="pct" && (v<0||v>100))) err = "El percentil debe estar entre 0 y 100.";
+    else if(modo==="puesto" && v<1) err = "El puesto debe ser 1 o mayor.";
+    else{
+      idx = tabla.findIndex(r=>v>=r[0] && v<=r[1]); m = tabla[idx][2];
+      const r = tabla[idx], rango = r[1]===Infinity ? "mayor a 499" : (modo==="pct"&&r[0]===0 ? "menor a 50" : r[0]+" a "+r[1]);
+      txt = (modo==="pct" ? "Percentil " : "Puesto ") + v + " → rango " + rango + " = " + m + ".";
+    }
+  }
+  $("e_saber").textContent = err; if(err) txt = "Dato no válido.";
+  $("t_saber").innerHTML = `<table><tr><th>${modo==="pct"?"Percentil":"Puesto"}</th>${tabla.map((r,i)=>`<th>${r[1]===Infinity?"> 499":(modo==="pct"&&r[0]===0?"< 50":r[0]+"–"+r[1])}</th>`).join("")}</tr>
+    <tr class="x"><td><b>Puntos</b></td>${tabla.map((r,i)=>`<td${i===idx?' style="background:#e3f3ea;font-weight:700"':''}>${r[2]}</td>`).join("")}</tr></table>`;
+  m = Math.min(TOPE.m, m); pinta("p_saber", m); $("c_m").textContent = txt;
+
+  // 4. Trayectorias: no acumulable
+  let n = 0;
+  TRAYECTORIAS.forEach(x=>{ const on = $("t_"+x.id).value!=="0"; pinta("p_t_"+x.id, on?P_TRAY:0); if(on) n++; });
+  const t = n>0 ? Math.min(TOPE.t, P_TRAY) : 0;
+  $("c_t").textContent = n===0 ? "Sin condiciones marcadas." : n===1 ? "1 condición = "+t+"." : n+" condiciones, no se acumulan = "+t+".";
+
+  // Total
+  const val = {e, ec, m, t};
+  CRITERIOS.forEach(([k])=>{ $("v_"+k).textContent = val[k]; $("b_"+k).style.width = (100*val[k]/TOPE[k])+"%"; });
+  $("total").textContent = e+ec+m+t;
+}
+
+document.querySelectorAll("select,input").forEach(el=>{ el.addEventListener("change",calcular); el.addEventListener("input",calcular); });
+$("limpiar").addEventListener("click",()=>{
+  document.querySelectorAll("#form select").forEach(s=>s.selectedIndex=0); $("saber").value=""; calcular();
+});
+calcular();
+</script>
+</body>
+</html>
